@@ -1,10 +1,11 @@
-from typing import List, Tuple
+from typing import Any, List, Tuple
 
 from sqlalchemy import delete, select, Table
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import Session
 
 from __config__ import PROJECT_SOURCE_PATH_DB
+from utils.database.models import Base
 from utils.database.schema import admins, hotels, regions
 
 
@@ -14,11 +15,11 @@ class Unit:
     """
 
     table: Table
+    model: Base
     database_path: str = f"{PROJECT_SOURCE_PATH_DB}/database.db"
 
-    @staticmethod
-    def get_session() -> Session:
-        return Session()
+    def get_session(self) -> Session:
+        return Session(self.database_path)
 
     def add_unit(self, vals: Tuple) -> Tuple:
         """
@@ -28,14 +29,13 @@ class Unit:
 
         pass
 
-    def get_unit_by_id(self, unit_id: int) -> Row:
+    def get_unit_by_id(self, unit_id: int) -> Tuple[Any] | None:
         """
         :param unit_id: ID of the unit
         :return: unit
         """
-        return self.get_session().execute(
-            select(self.table).where(self.table.c.id == unit_id)
-        ).one()
+
+        return self.get_session().query(self.model).filter(self.model.id == unit_id).first()
 
     def get_unit_by_args(self, vals: Tuple) -> Tuple:
         """
@@ -45,8 +45,8 @@ class Unit:
 
         pass
 
-    def get_units(self) -> List[Row]:
-        return self.get_session().execute(select(self.table)).all()
+    def get_units(self) -> List[Tuple[Any]]:
+        return self.get_session().query(self.model).all()
 
     def delete_unit(self, unit_id: int) -> int:
         """
@@ -89,3 +89,9 @@ class Admins(Unit):
 
 class Regions(Unit):
     table = regions
+
+
+print(Hotel().get_session().query(hotels).all())
+
+a = Hotel().get_units()
+print(a)
