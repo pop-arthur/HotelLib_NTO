@@ -4,6 +4,7 @@ from sqlalchemy import delete, select, Table
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import Session
 
+from __config__ import PROJECT_SOURCE_PATH_DB
 from utils.database.schema import admins, hotels, regions
 
 
@@ -13,6 +14,7 @@ class Unit:
     """
 
     table: Table
+    database_path: str = f"{PROJECT_SOURCE_PATH_DB}/database.db"
 
     @staticmethod
     def get_session() -> Session:
