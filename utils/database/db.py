@@ -1,7 +1,6 @@
 from typing import Any, List, Tuple
 
-from sqlalchemy import delete, select, Table
-from sqlalchemy.engine import Row
+from sqlalchemy import delete, Table
 from sqlalchemy.orm import Session
 
 from __config__ import PROJECT_SOURCE_PATH_DB
