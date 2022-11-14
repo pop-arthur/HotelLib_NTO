@@ -1,11 +1,13 @@
-from typing import Any, List, Tuple
+from typing import List, Tuple
 
-from sqlalchemy import delete, Table
-from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, delete, Table, select
+from sqlalchemy.engine import Connection, Row
 
 from __config__ import PROJECT_SOURCE_PATH_DB
-from utils.database.models import AdminModel, Base, HotelModel, RegionModel
 from utils.database.schema import admins, hotels, regions
+
+database_path: str = f"sqlite:///{PROJECT_SOURCE_PATH_DB}/database.db"
+engine = create_engine(database_path)
 
 
 class Unit:
@@ -14,11 +16,11 @@ class Unit:
     """
 
     table: Table
-    model: Base
     database_path: str = f"{PROJECT_SOURCE_PATH_DB}/database.db"
 
-    def get_session(self) -> Session:
-        return Session(self.database_path)
+    @staticmethod
+    def get_session() -> Connection:
+        return engine.connect()
 
     def add_unit(self, vals: Tuple) -> Tuple:
         """
@@ -28,14 +30,6 @@ class Unit:
 
         pass
 
-    def get_unit_by_id(self, unit_id: int) -> Tuple[Any] | None:
-        """
-        :param unit_id: ID of the unit
-        :return: unit
-        """
-
-        return self.get_session().query(self.model).filter(self.model.id == unit_id).first()
-
     def get_unit_by_args(self, vals: Tuple) -> Tuple:
         """
         :param vals: unit's values
@@ -44,8 +38,17 @@ class Unit:
 
         pass
 
-    def get_units(self) -> List[Tuple[Any]]:
-        return self.get_session().query(self.model).all()
+    def get_unit_by_id(self, unit_id: int) -> Row:
+        """
+        :param unit_id: ID of the unit
+        :return: unit
+        """
+        return self.get_session().execute(
+            select(self.table).where(self.table.c.id == unit_id)
+        ).one()
+
+    def get_units(self) -> List[Row]:
+        return self.get_session().execute(select(self.table)).all()
 
     def delete_unit(self, unit_id: int) -> int:
         """
@@ -79,19 +82,12 @@ class Unit:
 
 
 class Hotel(Unit):
-    model = HotelModel
     table = hotels
 
 
 class Admins(Unit):
-    model = AdminModel
     table = admins
 
 
 class Regions(Unit):
-    model = RegionModel
     table = regions
-
-
-a = Hotel().get_units()
-print(a)
