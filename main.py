@@ -35,7 +35,6 @@ class DayData(QDialog):
             'phone': 'Номер телефона',
             'admin': 'Управляющий',
             'description': 'Описание'
-
         }
 
         self.tableWidget.setColumnCount(len(headers))
