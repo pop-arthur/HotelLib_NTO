@@ -1,54 +1,85 @@
-import sqlite3
 import sys
 from PyQt5 import uic
+from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QWidget, QTableWidgetItem, QDialog
 from __config__ import *
+from utils.database.db import *
 
 sys._excepthook = sys.excepthook
 
+headers_full = ['id', 'Название', 'Местонахождение', 'Номер телефона', 'Управляющий', 'Описание']
+headers_admins = ['id', 'ФИО', 'Роль', 'Номер телефона', 'Email']
+headers_regions = ['id', 'Регион']
 
-def get_data_from_db():
-    con = sqlite3.connect(f'{PROJECT_SOURCE_PATH_DB}/database.db')
-    cur = con.cursor()
-    return cur.execute('SELECT * FROM hotels').fetchall()
+
+def get_full_data_from_db():
+    hotels = Hotel().get_units()
+    admins = Admins().get_units()
+    regions = Regions().get_units()
+    data = list()
+    for hotel in hotels:
+        buf_hotel = list()
+        for i, elem in enumerate(hotel):
+            if i == 0:
+                buf_hotel.append(elem)
+            elif i == 1:
+                buf_hotel.append(elem)
+            elif i == 2:
+                for place in regions:
+                    if place[0] == elem:
+                        buf_hotel.append(place[1])
+                        break
+            elif i == 3:
+                buf_hotel.append(elem)
+            elif i == 4:
+                for admin in admins:
+                    if admin[0] == elem:
+                        buf_hotel.append(admin[1])
+                        break
+            elif i == 5:
+                buf_hotel.append(elem)
+        data.append(buf_hotel)
+    return data
 
 
 class HomePage(QWidget):
     def __init__(self):
         super(HomePage, self).__init__()
         uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/home_page.ui', self)
-        self.pushButton.clicked.connect(self.pressed)
+        self.setWindowTitle("Global Tour")
+
+        self.pushButton_full.clicked.connect(self.pressed)
+        self.pushButton_admins.clicked.connect(self.pressed)
+        self.pushButton_regions.clicked.connect(self.pressed)
+
         self.show()
 
     def pressed(self):
-        self.day_data = DayData(get_data_from_db())
+        if self.sender() == self.pushButton_full:
+            self.day_data = DayData(get_full_data_from_db(), headers_full)
+        elif self.sender() == self.pushButton_admins:
+            self.day_data = DayData(Admins().get_units(), headers_admins)
+        elif self.sender() == self.pushButton_regions:
+            self.day_data = DayData(Regions().get_units(), headers_regions)
+
         self.day_data.show()
 
 
 class DayData(QDialog):
-    def __init__(self, data: list):
+    def __init__(self, data: list, headers: list):
         super(DayData, self).__init__()
         uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/day_data.ui', self)
-        self.init_ui(data)
+        self.init_ui(data, headers)
 
-    def init_ui(self, data: list):
+    def init_ui(self, data: list, headers: list):
         self.setWindowTitle('Все данные, что мы имеем')
 
         self.pushButton.clicked.connect(self.ok_pressed)
 
-        headers = {
-            'name': 'Название',
-            'place': 'Местонахождение',
-            'phone': 'Номер телефона',
-            'admin': 'Управляющий',
-            'description': 'Описание',
-            'none': 'пусто'
-        }
-
         self.tableWidget.setColumnCount(len(headers))
-        self.tableWidget.setHorizontalHeaderLabels(list(headers.values()))
+        self.tableWidget.setHorizontalHeaderLabels(headers)
         self.tableWidget.setRowCount(0)
-        for _ in range(10):
+        for _ in range(5):
             for elem in data:
                 row_position = self.tableWidget.rowCount()
                 self.tableWidget.insertRow(row_position)
