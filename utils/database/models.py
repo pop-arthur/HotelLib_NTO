@@ -21,7 +21,7 @@ class HotelModel(Base):
 
 
 class RegionModel(Base):
-    __tablename__ = "hotels"
+    __tablename__ = "regions"
 
     id = Column(Integer, primary_key=True, nullable=False)
     region_name = Column(String(200), nullable=False)
@@ -31,7 +31,7 @@ class RegionModel(Base):
 
 
 class AdminModel(Base):
-    __tablename__ = "hotels"
+    __tablename__ = "admins"
 
     id = Column(Integer, primary_key=True, nullable=False)
     full_name = Column(String, nullable=False)

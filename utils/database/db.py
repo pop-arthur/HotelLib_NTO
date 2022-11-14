@@ -4,7 +4,7 @@ from sqlalchemy import delete, Table
 from sqlalchemy.orm import Session
 
 from __config__ import PROJECT_SOURCE_PATH_DB
-from utils.database.models import Base
+from utils.database.models import AdminModel, Base, HotelModel, RegionModel
 from utils.database.schema import admins, hotels, regions
 
 
@@ -79,18 +79,19 @@ class Unit:
 
 
 class Hotel(Unit):
+    model = HotelModel
     table = hotels
 
 
 class Admins(Unit):
+    model = AdminModel
     table = admins
 
 
 class Regions(Unit):
+    model = RegionModel
     table = regions
 
-
-print(Hotel().get_session().query(hotels).all())
 
 a = Hotel().get_units()
 print(a)
