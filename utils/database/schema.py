@@ -21,10 +21,11 @@ hotels = Table(
     metadata,
 
     Column('id', Integer, primary_key=True, nullable=False),
+    Column('name', String(200), nullable=False),
     Column('place_id', Integer, ForeignKey('regions.id', ondelete='SET NULL'), nullable=True),
     Column('phone', String, nullable=False),
     Column('admin_id', Integer, ForeignKey('admins.id', ondelete='SET NULL'), nullable=True),
-    Column('description', String, nullable=False),
+    Column('description', String(500), nullable=False),
 )
 
 
@@ -45,5 +46,4 @@ admins = Table(
     Column('role', String, nullable=False),
     Column('phone', String, nullable=False),
     Column('email', String, nullable=False),
-
 )
