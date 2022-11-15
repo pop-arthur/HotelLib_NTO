@@ -4,3 +4,4 @@ from pathlib import Path
 PROJECT_PATH = Path(__file__).parent.resolve()
 PROJECT_SOURCE_PATH_UI = Path(f'{PROJECT_PATH}\\source/ui').resolve()
 PROJECT_SOURCE_PATH_DB = Path(f'{PROJECT_PATH}\\source/db').resolve()
+PROJECT_SOURCE_PATH_ICONS = Path(f'{PROJECT_PATH}\\source/icons')

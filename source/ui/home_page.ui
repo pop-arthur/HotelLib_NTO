@@ -26,9 +26,9 @@ QPushButton
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>280</x>
+     <x>240</x>
      <y>180</y>
-     <width>501</width>
+     <width>541</width>
      <height>91</height>
     </rect>
    </property>
@@ -52,11 +52,11 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_regions">
+  <widget class="QPushButton" name="pushButton_admins">
    <property name="geometry">
     <rect>
-     <x>575</x>
-     <y>415</y>
+     <x>320</x>
+     <y>560</y>
      <width>350</width>
      <height>50</height>
     </rect>
@@ -77,13 +77,13 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
 }</string>
    </property>
    <property name="text">
-    <string>Таблица  Управляющих</string>
+    <string>БД Управляющих</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_full">
    <property name="geometry">
     <rect>
-     <x>100</x>
+     <x>340</x>
      <y>350</y>
      <width>350</width>
      <height>50</height>
@@ -108,11 +108,11 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
     <string>Таблица  Отелей</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_admins">
+  <widget class="QPushButton" name="pushButton_regions">
    <property name="geometry">
     <rect>
-     <x>300</x>
-     <y>510</y>
+     <x>510</x>
+     <y>490</y>
      <width>350</width>
      <height>50</height>
     </rect>
@@ -135,7 +135,7 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
 }</string>
    </property>
    <property name="text">
-    <string>Таблица  Регионов</string>
+    <string>БД Регионов</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -193,6 +193,34 @@ background-color: transparent;
    </property>
    <property name="text">
     <string>Cyber Vegetables</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_hotels">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>490</y>
+     <width>350</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color: #000000;
+	text-shadow: 0px 0px 50px #FFFFFF;
+	background-color: #6CF1DA;
+	border-radius: 10px;
+}</string>
+   </property>
+   <property name="text">
+    <string>БД Отелей</string>
    </property>
   </widget>
  </widget>

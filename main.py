@@ -1,14 +1,15 @@
 import sys
 from PyQt5 import uic
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QHeaderView, QTableWidget, QWidget, QTableWidgetItem, QDialog
 from __config__ import *
 from utils.database.db import *
 
 sys._excepthook = sys.excepthook
 
-headers_full = ['id', 'Название', 'Местонахождение', 'Номер телефона', 'Управляющий', 'Описание']
-headers_admins = ['id', 'ФИО', 'Роль', 'Номер телефона', 'Email']
-headers_regions = ['id', 'Регион']
+headers_full = ['ID', 'Название', 'Местонахождение', 'Номер телефона', 'Управляющий', 'Описание']
+headers_admins = ['ID', 'ФИО', 'Роль', 'Номер телефона', 'Email']
+headers_regions = ['ID', 'Регион']
 
 
 class HomePage(QWidget):
@@ -16,19 +17,19 @@ class HomePage(QWidget):
         super(HomePage, self).__init__()
         uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/home_page.ui', self)
         self.setWindowTitle("Global Tour")
+        self.setWindowIcon(QIcon(f'{PROJECT_SOURCE_PATH_ICONS}/icon_dark.png'))
 
         self.pushButton_full.clicked.connect(self.pressed)
         self.pushButton_admins.clicked.connect(self.pressed)
         self.pushButton_regions.clicked.connect(self.pressed)
-        # self.pushButton_db.clicked.connect(self.pressed)
+        self.pushButton_hotels.clicked.connect(self.pressed)
 
         self.show()
 
     def pressed(self):
-        print(Hotel().get_units())
         if self.sender() == self.pushButton_full:
             self.table_view = TableViewWidget(Hotel().get_pretty_units()[0], headers_full)
-        elif self.sender() == self.pushButton_db:
+        elif self.sender() == self.pushButton_hotels:
             self.table_view = TableViewWidget(Hotel().get_units(), headers_full)
         elif self.sender() == self.pushButton_admins:
             self.table_view = TableViewWidget(Admins().get_units(), headers_admins)
@@ -45,7 +46,8 @@ class TableViewWidget(QDialog):
         self.init_ui(data, headers)
 
     def init_ui(self, data: list, headers: list):
-        self.setWindowTitle('Все данные, что мы имеем')
+        self.setWindowTitle('Data')
+        self.setWindowIcon(QIcon(f'{PROJECT_SOURCE_PATH_ICONS}/icon_light.png'))
 
         self.pushButton.clicked.connect(self.ok_pressed)
 
@@ -54,7 +56,8 @@ class TableViewWidget(QDialog):
         self.tableWidget.setRowCount(0)
         # ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
         self.tableWidget: QTableWidget
-        self.tableWidget.verticalHeader().setMaximumSize(250, 60)
+        self.tableWidget.verticalHeader().setMaximumSize(250, 50 * len(data))
+        self.tableWidget.verticalHeader().hide()
 
         for elem in data:
             row_position = self.tableWidget.rowCount()
