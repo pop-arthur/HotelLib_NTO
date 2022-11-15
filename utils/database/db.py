@@ -48,7 +48,9 @@ class Unit:
         ).one()
 
     def get_units(self) -> List[Row]:
-        return self.get_session().execute(select(self.table)).all()
+        return self.get_session().execute(
+            Hotel.join_admins(self, select(self.table))
+        ).all()
 
     def delete_unit(self, unit_id: int) -> int:
         """
@@ -84,6 +86,28 @@ class Unit:
 class Hotel(Unit):
     table = hotels
 
+    def get_units(self) -> List[Row]:
+        return self.get_session().execute(
+            self.join_all_connected_tables(select(self.table))
+        ).all()
+
+    def join_regions(self, sql_request):
+        return sql_request.join(Regions.table, self.table.c.place_id == Regions.table.c.id)
+
+    def join_all_connected_tables(self, sql_request):
+        sql_request = self.join_regions(sql_request)
+        sql_request = self.join_admins(sql_request)
+
+        print(sql_request)
+        return sql_request
+
+    def join_admins(self, sql_request):
+        """
+        :param sql_request:
+        :return:
+        """
+        return sql_request.join(Admins.table, self.table.c.admin_id == Admins.table.c.id)
+
 
 class Admins(Unit):
     table = admins
@@ -91,3 +115,12 @@ class Admins(Unit):
 
 class Regions(Unit):
     table = regions
+
+# print(Hotel().table.columns)
+
+
+print(
+    Hotel().get_units()
+)
+
+
