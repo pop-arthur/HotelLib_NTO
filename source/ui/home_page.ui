@@ -49,54 +49,70 @@
     <string>Global Tour</string>
    </property>
   </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>260</y>
-     <width>801</width>
-     <height>161</height>
+     <x>190</x>
+     <y>300</y>
+     <width>756</width>
+     <height>84</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <property name="spacing">
-     <number>10</number>
-    </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QPushButton" name="pushButton_full">
+     <widget class="QPushButton" name="pushButton_db">
       <property name="font">
        <font>
         <pointsize>18</pointsize>
        </font>
       </property>
       <property name="text">
-       <string>Вывод общей БД</string>
+       <string>Вывод БД</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_admins">
-      <property name="font">
-       <font>
-        <pointsize>18</pointsize>
-       </font>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>10</number>
       </property>
-      <property name="text">
-       <string>Вывод БД управляющих</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="pushButton_regions">
-      <property name="font">
-       <font>
-        <pointsize>18</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Вывод БД регионов</string>
-      </property>
-     </widget>
+      <item>
+       <widget class="QPushButton" name="pushButton_full">
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Вывод красивой БД</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_admins">
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Вывод БД управляющих</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_regions">
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Вывод БД регионов</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

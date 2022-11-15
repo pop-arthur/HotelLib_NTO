@@ -89,7 +89,7 @@ class Hotel(Unit):
     admin_indexes = [7, 8, 9, 10]
     region_indexes = [12]
 
-    def get_units(self) -> Tuple[List, List, List]:
+    def get_pretty_units(self) -> Tuple[List, List, List]:
         join_rows = self.get_session().execute(
             self.join_all_connected_tables(select(
                 self.table, Admins.table, Regions.table
@@ -100,7 +100,10 @@ class Hotel(Unit):
 
         for row in join_rows:
             hotel_info, admin_info, region_info = row[:6], row[6:11], row[11:]
-            hotel_info[2], hotel_info[4] = region_info[1], admin_info[7]
+            hotel_info = list(hotel_info)
+            admin_info = list(admin_info)
+            region_info = list(region_info)
+            hotel_info[2], hotel_info[4] = region_info[1], admin_info[1]
 
             hotels_info.append(hotel_info)
             admins_info.append(admin_info)
@@ -133,10 +136,3 @@ class Admins(Unit):
 class Regions(Unit):
     table = regions
 
-
-# print(Hotel().table.columns)
-
-
-print(
-    *Hotel().get_units(), sep='\n'
-)

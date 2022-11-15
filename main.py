@@ -1,6 +1,5 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QWidget, QTableWidgetItem, QDialog
 from __config__ import *
 from utils.database.db import *
@@ -12,36 +11,6 @@ headers_admins = ['id', 'ФИО', 'Роль', 'Номер телефона', 'Em
 headers_regions = ['id', 'Регион']
 
 
-def get_full_data_from_db():
-    hotels = Hotel().get_units()
-    admins = Admins().get_units()
-    regions = Regions().get_units()
-    data = list()
-    for hotel in hotels:
-        buf_hotel = list()
-        for i, elem in enumerate(hotel):
-            if i == 0:
-                buf_hotel.append(elem)
-            elif i == 1:
-                buf_hotel.append(elem)
-            elif i == 2:
-                for place in regions:
-                    if place[0] == elem:
-                        buf_hotel.append(place[1])
-                        break
-            elif i == 3:
-                buf_hotel.append(elem)
-            elif i == 4:
-                for admin in admins:
-                    if admin[0] == elem:
-                        buf_hotel.append(admin[1])
-                        break
-            elif i == 5:
-                buf_hotel.append(elem)
-        data.append(buf_hotel)
-    return data
-
-
 class HomePage(QWidget):
     def __init__(self):
         super(HomePage, self).__init__()
@@ -51,23 +20,26 @@ class HomePage(QWidget):
         self.pushButton_full.clicked.connect(self.pressed)
         self.pushButton_admins.clicked.connect(self.pressed)
         self.pushButton_regions.clicked.connect(self.pressed)
+        self.pushButton_db.clicked.connect(self.pressed)
 
         self.show()
 
     def pressed(self):
         if self.sender() == self.pushButton_full:
-            self.day_data = DayData(get_full_data_from_db(), headers_full)
+            self.table_view = TableViewWidget(Hotel().get_pretty_units()[0], headers_full)
+        elif self.sender() == self.pushButton_db:
+            self.table_view = TableViewWidget(Hotel().get_units(), headers_full)
         elif self.sender() == self.pushButton_admins:
-            self.day_data = DayData(Admins().get_units(), headers_admins)
+            self.table_view = TableViewWidget(Admins().get_units(), headers_admins)
         elif self.sender() == self.pushButton_regions:
-            self.day_data = DayData(Regions().get_units(), headers_regions)
+            self.table_view = TableViewWidget(Regions().get_units(), headers_regions)
 
-        self.day_data.show()
+        self.table_view.show()
 
 
-class DayData(QDialog):
+class TableViewWidget(QDialog):
     def __init__(self, data: list, headers: list):
-        super(DayData, self).__init__()
+        super(TableViewWidget, self).__init__()
         uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/day_data.ui', self)
         self.init_ui(data, headers)
 
