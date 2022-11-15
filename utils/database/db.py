@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 from sqlalchemy import create_engine, delete, Table, select
 from sqlalchemy.engine import Connection, Row
@@ -49,7 +49,7 @@ class Unit:
 
     def get_units(self) -> List[Row]:
         return self.get_session().execute(
-            Hotel.join_admins(self, select(self.table))
+            select(self.table)
         ).all()
 
     def delete_unit(self, unit_id: int) -> int:
@@ -85,11 +85,28 @@ class Unit:
 
 class Hotel(Unit):
     table = hotels
+    hotel_indexes = [0, 1, 3, 5]
+    admin_indexes = [7, 8, 9, 10]
+    region_indexes = [12]
 
-    def get_units(self) -> List[Row]:
-        return self.get_session().execute(
-            self.join_all_connected_tables(select(self.table))
+    def get_units(self) -> Tuple[List, List, List]:
+        join_rows = self.get_session().execute(
+            self.join_all_connected_tables(select(
+                self.table, Admins.table, Regions.table
+            ))
         ).all()
+
+        hotels_info, admins_info, regions_info = [], [], []
+
+        for row in join_rows:
+            hotel_info, admin_info, region_info = row[:6], row[6:11], row[11:]
+            hotel_info[2], hotel_info[4] = region_info[1], admin_info[7]
+
+            hotels_info.append(hotel_info)
+            admins_info.append(admin_info)
+            regions_info.append(region_info)
+
+        return hotels_info, admins_info, regions_info
 
     def join_regions(self, sql_request):
         return sql_request.join(Regions.table, self.table.c.place_id == Regions.table.c.id)
@@ -98,7 +115,6 @@ class Hotel(Unit):
         sql_request = self.join_regions(sql_request)
         sql_request = self.join_admins(sql_request)
 
-        print(sql_request)
         return sql_request
 
     def join_admins(self, sql_request):
@@ -106,6 +122,7 @@ class Hotel(Unit):
         :param sql_request:
         :return:
         """
+
         return sql_request.join(Admins.table, self.table.c.admin_id == Admins.table.c.id)
 
 
@@ -116,11 +133,10 @@ class Admins(Unit):
 class Regions(Unit):
     table = regions
 
+
 # print(Hotel().table.columns)
 
 
 print(
-    Hotel().get_units()
+    *Hotel().get_units(), sep='\n'
 )
-
-
