@@ -6,115 +6,194 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1098</width>
-    <height>610</height>
+    <width>1024</width>
+    <height>768</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>570</y>
-     <width>301</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>16</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>by Cyber Vegetables</string>
-   </property>
-  </widget>
+  <property name="styleSheet">
+   <string notr="true">background-color: #1E1E1E;
+
+QPushButton
+{
+	color: #FFFFFF;
+	text-shadow: 0px 0px 50px #FFFFFF;
+	background-color: #6CF1DA;
+}</string>
+  </property>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>160</y>
-     <width>361</width>
-     <height>71</height>
+     <x>280</x>
+     <y>180</y>
+     <width>501</width>
+     <height>91</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>50</pointsize>
+     <family>Open Sans</family>
+     <pointsize>66</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #FFFFFF;
+background-color: transparent;
+text-shadow: 0px 0px 50px #FFFFFF;</string>
    </property>
    <property name="text">
     <string>Global Tour</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget">
+  <widget class="QPushButton" name="pushButton_regions">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>300</y>
-     <width>756</width>
-     <height>84</height>
+     <x>575</x>
+     <y>415</y>
+     <width>350</width>
+     <height>50</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QPushButton" name="pushButton_db">
-      <property name="font">
-       <font>
-        <pointsize>18</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Вывод БД</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="spacing">
-       <number>10</number>
-      </property>
-      <item>
-       <widget class="QPushButton" name="pushButton_full">
-        <property name="font">
-         <font>
-          <pointsize>18</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Вывод красивой БД</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_admins">
-        <property name="font">
-         <font>
-          <pointsize>18</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Вывод БД управляющих</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_regions">
-        <property name="font">
-         <font>
-          <pointsize>18</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Вывод БД регионов</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-   </layout>
+   <property name="font">
+    <font>
+     <family>Open Sans</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color: #000000;
+	text-shadow: 0px 0px 50px #FFFFFF;
+	background-color: #6CF1DA;
+	border-radius: 10px;
+}</string>
+   </property>
+   <property name="text">
+    <string>Таблица  Управляющих</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_full">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>350</y>
+     <width>350</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color: #000000;
+	text-shadow: 0px 0px 50px #FFFFFF;
+	background-color: #6CF1DA;
+	border-radius: 10px;
+}</string>
+   </property>
+   <property name="text">
+    <string>Таблица  Отелей</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_admins">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>510</y>
+     <width>350</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans</family>
+     <pointsize>18</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color: #000000;
+	text-shadow: 0px 0px 50px #FFFFFF;
+	background-color: #6CF1DA;
+	border-radius: 10px;
+}</string>
+   </property>
+   <property name="text">
+    <string>Таблица  Регионов</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>720</y>
+     <width>116</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans</family>
+     <pointsize>16</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #ffffff;
+text-shadow: 0px 0px 50px #FFFFFF;
+background-color: transparent;
+
+</string>
+   </property>
+   <property name="text">
+    <string>Created by </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>720</y>
+     <width>165</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans</family>
+     <pointsize>16</pointsize>
+     <weight>50</weight>
+     <italic>true</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #ffffff;
+text-shadow: 0px 0px 50px #FFFFFF;
+background-color: transparent;
+
+</string>
+   </property>
+   <property name="text">
+    <string>Cyber Vegetables</string>
+   </property>
   </widget>
  </widget>
  <resources/>

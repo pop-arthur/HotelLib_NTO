@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QWidget, QTableWidgetItem, QDialog
+from PyQt5.QtWidgets import QApplication, QHeaderView, QTableWidget, QWidget, QTableWidgetItem, QDialog
 from __config__ import *
 from utils.database.db import *
 
@@ -20,11 +20,12 @@ class HomePage(QWidget):
         self.pushButton_full.clicked.connect(self.pressed)
         self.pushButton_admins.clicked.connect(self.pressed)
         self.pushButton_regions.clicked.connect(self.pressed)
-        self.pushButton_db.clicked.connect(self.pressed)
+        # self.pushButton_db.clicked.connect(self.pressed)
 
         self.show()
 
     def pressed(self):
+        print(Hotel().get_units())
         if self.sender() == self.pushButton_full:
             self.table_view = TableViewWidget(Hotel().get_pretty_units()[0], headers_full)
         elif self.sender() == self.pushButton_db:
@@ -51,13 +52,16 @@ class TableViewWidget(QDialog):
         self.tableWidget.setColumnCount(len(headers))
         self.tableWidget.setHorizontalHeaderLabels(headers)
         self.tableWidget.setRowCount(0)
-        for _ in range(5):
-            for elem in data:
-                row_position = self.tableWidget.rowCount()
-                self.tableWidget.insertRow(row_position)
-                for i, val in enumerate(elem):
-                    table_widget_item = QTableWidgetItem(str(val))
-                    self.tableWidget.setItem(row_position, i, table_widget_item)
+        # ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+        self.tableWidget: QTableWidget
+        self.tableWidget.verticalHeader().setMaximumSize(250, 60)
+
+        for elem in data:
+            row_position = self.tableWidget.rowCount()
+            self.tableWidget.insertRow(row_position)
+            for i, val in enumerate(elem):
+                table_widget_item = QTableWidgetItem(str(val))
+                self.tableWidget.setItem(row_position, i, table_widget_item)
 
     def ok_pressed(self):
         self.close()

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>806</width>
-    <height>503</height>
+    <height>581</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,26 @@
    <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QTableWidget" name="tableWidget">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="styleSheet">
       <string notr="true">QTableWidget
 {
@@ -33,11 +51,11 @@
      <attribute name="horizontalHeaderCascadingSectionResizes">
       <bool>true</bool>
      </attribute>
-     <attribute name="horizontalHeaderDefaultSectionSize">
-      <number>110</number>
-     </attribute>
      <attribute name="horizontalHeaderMinimumSectionSize">
       <number>50</number>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>110</number>
      </attribute>
      <attribute name="horizontalHeaderStretchLastSection">
       <bool>true</bool>
@@ -45,10 +63,10 @@
      <attribute name="verticalHeaderCascadingSectionResizes">
       <bool>true</bool>
      </attribute>
-     <attribute name="verticalHeaderDefaultSectionSize">
+     <attribute name="verticalHeaderMinimumSectionSize">
       <number>50</number>
      </attribute>
-     <attribute name="verticalHeaderMinimumSectionSize">
+     <attribute name="verticalHeaderDefaultSectionSize">
       <number>50</number>
      </attribute>
      <attribute name="verticalHeaderStretchLastSection">
@@ -83,7 +101,9 @@
         <string notr="true">QPushButton
 {
 	background: rgb(255, 255, 255);
-	border-radius: 10;
+	border-radius: 15;
+    margin: 20px 0;
+	height: 30px;
 }</string>
        </property>
        <property name="text">
