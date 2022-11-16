@@ -44,20 +44,39 @@ QPushButton
      <property name="enabled">
       <bool>true</bool>
      </property>
+     <property name="font">
+      <font>
+       <family>Open Sans</family>
+       <pointsize>9</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QTableWidget
 {
 	opacity: 100;
 	сolor: rgb(255, 255, 255);
-	radius: 15;
+	cellspacing: 0;
+	cellpadding: 0;
+	border: none;
 }
 
-QHeaderView, QHeaderView::section {
+QTableWidget::cellActivated {
+	color: rgb(255, 255, 255);
+}
+
+QHeaderView, QHeaderView::section, QHeaderView:focus {
     background-color: &quot;#6cf2da&quot;;
+	cellspacing: 0;
+	cellpadding: 0;
 }
 
-QTableWidget::item {
+QTableWidget::item, QTableWidget::item:focus {
 	color: rgba(255, 255, 255, 255);
+	cellspacing: 0;
+	cellpadding: 0;
+
 	border: 1px solid &quot;#6cf2da&quot;;
 }</string>
      </property>
@@ -67,11 +86,11 @@ QTableWidget::item {
      <attribute name="horizontalHeaderCascadingSectionResizes">
       <bool>true</bool>
      </attribute>
-     <attribute name="horizontalHeaderDefaultSectionSize">
-      <number>110</number>
-     </attribute>
      <attribute name="horizontalHeaderMinimumSectionSize">
       <number>50</number>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>110</number>
      </attribute>
      <attribute name="horizontalHeaderStretchLastSection">
       <bool>true</bool>
@@ -79,10 +98,10 @@ QTableWidget::item {
      <attribute name="verticalHeaderCascadingSectionResizes">
       <bool>true</bool>
      </attribute>
-     <attribute name="verticalHeaderDefaultSectionSize">
+     <attribute name="verticalHeaderMinimumSectionSize">
       <number>50</number>
      </attribute>
-     <attribute name="verticalHeaderMinimumSectionSize">
+     <attribute name="verticalHeaderDefaultSectionSize">
       <number>50</number>
      </attribute>
      <attribute name="verticalHeaderStretchLastSection">

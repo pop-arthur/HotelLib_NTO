@@ -55,8 +55,8 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
   <widget class="QPushButton" name="pushButton_admins">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>560</y>
+     <x>260</x>
+     <y>530</y>
      <width>350</width>
      <height>50</height>
     </rect>
@@ -83,8 +83,8 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
   <widget class="QPushButton" name="pushButton_full">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>350</y>
+     <x>390</x>
+     <y>340</y>
      <width>350</width>
      <height>50</height>
     </rect>
@@ -111,8 +111,8 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
   <widget class="QPushButton" name="pushButton_regions">
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>490</y>
+     <x>570</x>
+     <y>450</y>
      <width>350</width>
      <height>50</height>
     </rect>
@@ -198,8 +198,8 @@ background-color: transparent;
   <widget class="QPushButton" name="pushButton_hotels">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>490</y>
+     <x>90</x>
+     <y>420</y>
      <width>350</width>
      <height>50</height>
     </rect>
