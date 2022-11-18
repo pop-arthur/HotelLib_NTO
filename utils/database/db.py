@@ -1,6 +1,6 @@
 from typing import List, Tuple, Dict
 
-from sqlalchemy import create_engine, delete, Table, select
+from sqlalchemy import create_engine, delete, insert, Table, select
 from sqlalchemy.engine import Connection, Row
 
 from __config__ import PROJECT_SOURCE_PATH_DB
@@ -22,21 +22,36 @@ class Unit:
     def get_session() -> Connection:
         return engine.connect()
 
-    def add_unit(self, vals: Tuple) -> Tuple:
+    def add_unit(self, vals: Dict) -> Row:
         """
         :param vals: unit's values
         :return: added unit
         """
+        session = self.get_session()
+        user = session.execute(insert(self.table).values(**vals))
+        session.commit()
 
-        pass
+        return self.get_unit_by_id(user.inserted_primary_key)
 
-    def get_unit_by_args(self, vals: Tuple) -> Tuple:
+    def delete_unit_by_id(self, unit_id: int):
+        try:
+            session = self.get_session()
+            session.execute(delete(self.table).where(self.table.c.id == unit_id))
+            session.commit()
+
+            return 1
+        except Exception:
+            return 0
+
+    def get_unit_by_args(self, vals: Dict) -> Row:
         """
         :param vals: unit's values
         :return: unit
         """
 
-        pass
+        return self.get_session().execute(
+            select(self.table).where(**vals)
+        ).one()
 
     def get_unit_by_id(self, unit_id: int) -> Row:
         """
@@ -135,4 +150,3 @@ class Admins(Unit):
 
 class Regions(Unit):
     table = regions
-

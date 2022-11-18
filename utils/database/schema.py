@@ -42,7 +42,7 @@ admins = Table(
     metadata,
 
     Column('id', Integer, primary_key=True, nullable=False),
-    Column('full_name', Integer, nullable=False),
+    Column('full_name', String, nullable=False),
     Column('role', String, nullable=False),
     Column('phone', String, nullable=False),
     Column('email', String, nullable=False),
