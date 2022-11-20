@@ -58,13 +58,9 @@ class TableViewWidget(QDialog):
 
         self.table = table
         self.headers = headers
-        self.data = (
-            self.table.get_units()
-            if type(self.table) is not Hotel else self.table.get_pretty_units()[0]
-        )
-        self.init_ui(headers)
+        self.init_ui()
 
-    def init_ui(self, headers: list):
+    def init_ui(self):
 
         uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/day_data.ui', self)
 
@@ -73,20 +69,24 @@ class TableViewWidget(QDialog):
 
         self.pushButton.clicked.connect(self.ok_pressed)
 
-        self.addButton.clicked.connect(self.add_data)
-        self.editButton.clicked.connect(self.add_data)
-        self.deleteButton.clicked.connect(self.add_data)
+        self.addButton.clicked.connect(self.process_data)
+        self.editButton.clicked.connect(self.process_data)
+        self.deleteButton.clicked.connect(self.process_data)
         self.init_table()
 
     def init_table(self):
+        data = self.table.get_units()
+        if isinstance(self.table, Hotel):
+            data = self.table.get_pretty_units()
+
         self.tableWidget.clear()
         self.tableWidget.setColumnCount(len(self.headers))
         self.tableWidget.setHorizontalHeaderLabels(self.headers)
         self.tableWidget.setRowCount(0)
-        self.tableWidget.verticalHeader().setMaximumSize(250, 50 * len(self.data))
+        self.tableWidget.verticalHeader().setMaximumSize(250, 50 * len(data))
         self.tableWidget.verticalHeader().hide()
 
-        for elem in self.data:
+        for elem in data:
             row_position = self.tableWidget.rowCount()
             self.tableWidget.insertRow(row_position)
             for i, val in enumerate(elem):
@@ -96,7 +96,7 @@ class TableViewWidget(QDialog):
     def ok_pressed(self):
         self.close()
 
-    def add_data(self):
+    def process_data(self):
         table = self.table.table
 
         form_data = {
@@ -112,30 +112,40 @@ class TableViewWidget(QDialog):
         if self.sender() == self.addButton:
 
             del form_data['id']
-            self.form = Form(form_data, self.table.__class__.__name__)
+            self.form = Form(self, form_data, self.table.__class__.__name__)
             self.form.show()
+
+            if self.form.exec():
+                self.init_table()
 
         elif self.sender() == self.editButton:
 
             row_number = self.tableWidget.currentRow()
+            if not row_number > 0:
+                return -1
+
             row_data = [self.tableWidget.item(row_number, i).text() for i in range(len(self.headers))]
 
             values = {header: elem for header, elem in zip(list(form_data.keys()), row_data)}
             values['id'] = int(values['id'])
+            values['row_number'] = row_number
 
-            self.form = Form(form_data, self.table.__class__.__name__, values)
+            self.form = Form(self, form_data, self.table.__class__.__name__, values)
             self.form.show()
+
+            if self.form.exec():
+                self.init_table()
 
         elif self.sender() == self.deleteButton:
             row_number = self.tableWidget.currentRow()
+            if not row_number > 0:
+                return -1
             row_data = [self.tableWidget.item(row_number, i).text() for i in range(len(self.headers))]
-
-            delete_form = DeleteForm(row_data)
+            text = [f"{header}: {value}" for header, value in zip(self.headers, row_data)]
+            delete_form = DeleteForm(text)
             if delete_form.exec():
-                print('Deleting')
                 self.table.delete_unit_by_id(int(row_data[0]))
                 self.init_table()
-                # TODO update table
 
 
 def exception_hook(exctype, value, traceback):
@@ -146,6 +156,7 @@ def exception_hook(exctype, value, traceback):
 sys.excepthook = exception_hook
 
 if __name__ == '__main__':
+    print(Hotel().get_pretty_units())
     app = QApplication(sys.argv)
     ex = HomePage()
     sys.exit(app.exec())

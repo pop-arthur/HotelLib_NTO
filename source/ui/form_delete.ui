@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>613</width>
     <height>337</height>
    </rect>
   </property>
@@ -34,7 +34,7 @@ QPushButton {
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>130</x>
      <y>10</y>
      <width>361</width>
      <height>81</height>
@@ -56,8 +56,8 @@ QPushButton {
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>100</y>
-     <width>331</width>
+     <y>80</y>
+     <width>551</width>
      <height>161</height>
     </rect>
    </property>
@@ -76,7 +76,7 @@ QPushButton {
   <widget class="QPushButton" name="button_ok">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>380</x>
      <y>270</y>
      <width>111</width>
      <height>51</height>
@@ -89,7 +89,7 @@ QPushButton {
   <widget class="QPushButton" name="button_cancel">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>480</x>
      <y>270</y>
      <width>111</width>
      <height>51</height>

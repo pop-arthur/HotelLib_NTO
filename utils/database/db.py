@@ -1,6 +1,6 @@
 from typing import List, Tuple, Dict
 
-from sqlalchemy import create_engine, delete, insert, Table, select
+from sqlalchemy import create_engine, delete, insert, Table, select, update
 from sqlalchemy.engine import Connection, Row
 
 from __config__ import PROJECT_SOURCE_PATH_DB
@@ -29,15 +29,26 @@ class Unit:
         """
         session = self.get_session()
         user = session.execute(insert(self.table).values(**vals))
-        session.commit()
+        # session.commit()
 
-        return self.get_unit_by_id(user.inserted_primary_key)
+        # return self.get_unit_by_id(user.inserted_primary_key)
+
+    def update_unit_by_id(self, unit_id: int, vals: Dict) -> None:
+        """
+        :param unit_id: ID of the unit
+        :param vals: Dict with data to update unit
+        :return: unit
+        """
+
+        self.get_session().execute(
+            update(self.table).where(self.table.c.id == unit_id).values(**vals)
+        )
 
     def delete_unit_by_id(self, unit_id: int):
         try:
             session = self.get_session()
             session.execute(delete(self.table).where(self.table.c.id == unit_id))
-            session.commit()
+            # session.commit()
 
             return 1
         except Exception:
@@ -124,7 +135,7 @@ class Hotel(Unit):
             admins_info.append(admin_info)
             regions_info.append(region_info)
 
-        return hotels_info, admins_info, regions_info
+        return hotels_info
 
     def join_regions(self, sql_request):
         return sql_request.join(Regions.table, self.table.c.place_id == Regions.table.c.id)
