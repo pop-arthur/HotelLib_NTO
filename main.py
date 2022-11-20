@@ -156,7 +156,6 @@ def exception_hook(exctype, value, traceback):
 sys.excepthook = exception_hook
 
 if __name__ == '__main__':
-    print(Hotel().get_pretty_units())
     app = QApplication(sys.argv)
     ex = HomePage()
     sys.exit(app.exec())
