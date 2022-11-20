@@ -76,14 +76,21 @@ QPushButton {
   <widget class="QPushButton" name="button_ok">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>340</x>
      <y>270</y>
-     <width>111</width>
+     <width>150</width>
      <height>51</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>-1</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="text">
-    <string>OK</string>
+    <string>Подтвердить</string>
    </property>
   </widget>
   <widget class="QPushButton" name="button_cancel">
@@ -95,8 +102,15 @@ QPushButton {
      <height>51</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>-1</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="text">
-    <string>Cancel</string>
+    <string>Отмена</string>
    </property>
   </widget>
  </widget>
