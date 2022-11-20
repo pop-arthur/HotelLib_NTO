@@ -62,22 +62,22 @@ QPushButton
 	border: none;
 }
 
-QTableWidget::cellActivated {
-	color: rgb(255, 255, 255);
-}
-
 QHeaderView, QHeaderView::section, QHeaderView:focus {
     background-color: &quot;#6cf2da&quot;;
 	cellspacing: 0;
 	cellpadding: 0;
+	opacity: 10;
 }
 
-QTableWidget::item, QTableWidget::item:focus {
+QTableWidget::item {
 	color: rgba(255, 255, 255, 255);
 	cellspacing: 0;
 	cellpadding: 0;
-
+	opacity: 10;
 	border: 1px solid &quot;#6cf2da&quot;;
+}
+QTableWidget::item:focus {
+	border: 5px solid &quot;#6cf2da&quot;;
 }</string>
      </property>
      <property name="frameShape">
@@ -86,11 +86,11 @@ QTableWidget::item, QTableWidget::item:focus {
      <attribute name="horizontalHeaderCascadingSectionResizes">
       <bool>true</bool>
      </attribute>
-     <attribute name="horizontalHeaderMinimumSectionSize">
-      <number>50</number>
-     </attribute>
      <attribute name="horizontalHeaderDefaultSectionSize">
       <number>110</number>
+     </attribute>
+     <attribute name="horizontalHeaderMinimumSectionSize">
+      <number>50</number>
      </attribute>
      <attribute name="horizontalHeaderStretchLastSection">
       <bool>true</bool>
@@ -98,10 +98,10 @@ QTableWidget::item, QTableWidget::item:focus {
      <attribute name="verticalHeaderCascadingSectionResizes">
       <bool>true</bool>
      </attribute>
-     <attribute name="verticalHeaderMinimumSectionSize">
+     <attribute name="verticalHeaderDefaultSectionSize">
       <number>50</number>
      </attribute>
-     <attribute name="verticalHeaderDefaultSectionSize">
+     <attribute name="verticalHeaderMinimumSectionSize">
       <number>50</number>
      </attribute>
      <attribute name="verticalHeaderStretchLastSection">
@@ -162,7 +162,7 @@ QTableWidget::item, QTableWidget::item:focus {
 </string>
        </property>
        <property name="text">
-        <string>Back</string>
+        <string>Назад</string>
        </property>
       </widget>
      </item>
@@ -206,7 +206,7 @@ QTableWidget::item, QTableWidget::item:focus {
 }</string>
        </property>
        <property name="text">
-        <string>Add</string>
+        <string>Добавить</string>
        </property>
       </widget>
      </item>
@@ -214,7 +214,7 @@ QTableWidget::item, QTableWidget::item:focus {
       <widget class="QPushButton" name="editButton">
        <property name="minimumSize">
         <size>
-         <width>120</width>
+         <width>150</width>
          <height>30</height>
         </size>
        </property>
@@ -237,7 +237,7 @@ QTableWidget::item, QTableWidget::item:focus {
 }</string>
        </property>
        <property name="text">
-        <string>Edit</string>
+        <string>Редактировать</string>
        </property>
       </widget>
      </item>
@@ -268,7 +268,7 @@ QTableWidget::item, QTableWidget::item:focus {
 }</string>
        </property>
        <property name="text">
-        <string>Remove</string>
+        <string>Удалить</string>
        </property>
       </widget>
      </item>

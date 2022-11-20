@@ -2,11 +2,11 @@ import sys
 
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QDialog, QTableWidget, QTableWidgetItem, QWidget
+from PyQt5.QtWidgets import QApplication, QDialog, QTableWidgetItem, QWidget
 
 from __config__ import *
 from utils.database.db import *
-from utils.forms import Form
+from utils.forms import Form, DeleteForm
 
 sys._excepthook = sys.excepthook
 
@@ -57,34 +57,36 @@ class TableViewWidget(QDialog):
         super(TableViewWidget, self).__init__()
 
         self.table = table
-        self.data = (
-            self.table.get_units()
-            if type(self.table) is not Hotel else self.table.get_pretty_units()[0]
-        )
-        self.init_ui(headers)
+        self.headers = headers
+        self.init_ui()
 
-    def init_ui(self, headers: list):
+    def init_ui(self):
 
         uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/day_data.ui', self)
 
-        self.setWindowTitle('Data')
+        self.setWindowTitle('Данные')
         self.setWindowIcon(QIcon(f'{PROJECT_SOURCE_PATH_ICONS}/icon_light.png'))
 
         self.pushButton.clicked.connect(self.ok_pressed)
 
-        self.addButton.clicked.connect(self.add_data)
-        self.editButton.clicked.connect(self.add_data)
-        self.deleteButton.clicked.connect(self.add_data)
+        self.addButton.clicked.connect(self.process_data)
+        self.editButton.clicked.connect(self.process_data)
+        self.deleteButton.clicked.connect(self.process_data)
+        self.init_table()
 
-        self.tableWidget.setColumnCount(len(headers))
-        self.tableWidget.setHorizontalHeaderLabels(headers)
+    def init_table(self):
+        data = self.table.get_units()
+        if isinstance(self.table, Hotel):
+            data = self.table.get_pretty_units()
+
+        self.tableWidget.clear()
+        self.tableWidget.setColumnCount(len(self.headers))
+        self.tableWidget.setHorizontalHeaderLabels(self.headers)
         self.tableWidget.setRowCount(0)
-        # ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-        self.tableWidget: QTableWidget
-        self.tableWidget.verticalHeader().setMaximumSize(250, 50 * len(self.data))
+        self.tableWidget.verticalHeader().setMaximumSize(250, 50 * len(data))
         self.tableWidget.verticalHeader().hide()
 
-        for elem in self.data:
+        for elem in data:
             row_position = self.tableWidget.rowCount()
             self.tableWidget.insertRow(row_position)
             for i, val in enumerate(elem):
@@ -94,7 +96,7 @@ class TableViewWidget(QDialog):
     def ok_pressed(self):
         self.close()
 
-    def add_data(self):
+    def process_data(self):
         table = self.table.table
 
         form_data = {
@@ -110,24 +112,42 @@ class TableViewWidget(QDialog):
         if self.sender() == self.addButton:
 
             del form_data['id']
-            self.form = Form(form_data, self.table.__class__.__name__)
+            self.form = Form(self, form_data, self.table.__class__.__name__, window_title='Добавить',
+                             headers=self.headers)
+            self.form.show()
+
+            if self.form.exec():
+                self.init_table()
 
         elif self.sender() == self.editButton:
 
-            # TODO запихать в values значения из записи тб
-            #  в формате имя столбца: значение для записи
+            row_number = self.tableWidget.currentRow()
+            if not row_number > 0:
+                return -1
 
-            values = {}
-            self.form = Form(form_data, self.table.__class__.__name__, values)
+            row_data = [self.tableWidget.item(row_number, i).text() for i in range(len(self.headers))]
+
+            values = {header: elem for header, elem in zip(list(form_data.keys()), row_data)}
+            values['id'] = int(values['id'])
+            values['row_number'] = row_number
+
+            self.form = Form(self, form_data, self.table.__class__.__name__, values, window_title='Редактировать',
+                             headers=self.headers)
+            self.form.show()
+
+            if self.form.exec():
+                self.init_table()
+
         elif self.sender() == self.deleteButton:
-
-            # TODO запихать в values значения из записи тб
-            #  в формате имя столбца: значение для записи
-
-            values = {}
-            self.form = Form(form_data, self.table.__class__.__name__, values)
-
-        self.form.show()
+            row_number = self.tableWidget.currentRow()
+            if not row_number > 0:
+                return -1
+            row_data = [self.tableWidget.item(row_number, i).text() for i in range(len(self.headers))]
+            text = [f"{header}: {value}" for header, value in zip(self.headers, row_data)]
+            delete_form = DeleteForm(text)
+            if delete_form.exec():
+                self.table.delete_unit_by_id(int(row_data[0]))
+                self.init_table()
 
 
 def exception_hook(exctype, value, traceback):
