@@ -5,7 +5,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QStyle, QTextEdit, QSpinBox, QComboBox, QWidget
 
 from __config__ import PROJECT_SOURCE_PATH_ICONS, PROJECT_SOURCE_PATH_UI
-from utils.database.db import Admins, Regions
+from utils.database.db import Admins, Regions, Hotel
 
 TYPE_TO_WIDGETS = {
     int: QSpinBox,
@@ -15,11 +15,12 @@ TYPE_TO_WIDGETS = {
 
 
 class Form(QDialog):
-    def __init__(self, fields: Dict, form_name: str, values={}):
+    def __init__(self, parent: QDialog, fields: Dict, form_name: str, values={}):
         super(Form, self).__init__()
 
         self.fields = {key: TYPE_TO_WIDGETS[value] for key, value in fields.items()}
 
+        self.parent = parent
         self.regions = None
         self.admins = None
         self.values = values
@@ -74,6 +75,7 @@ class Form(QDialog):
         self.create_widgets()
 
     def create_widgets(self):
+        self.widgets = dict()
 
         title = QLabel(self)
 
@@ -82,6 +84,7 @@ class Form(QDialog):
         title.setText(self.form_name)
 
         for i, (name, field) in enumerate(self.fields.items()):
+
             i += 2
             widget = QWidget(self)
             widget.setGeometry(0, i * 70, 300, 70)
@@ -91,6 +94,8 @@ class Form(QDialog):
             new_field.setGeometry(0, 0, 300, 70)
             new_field.setStyleSheet(self.input_widget_style)
 
+            self.widgets[name] = new_field
+
             if name == 'id':
                 new_field.setEnabled(False)
 
@@ -99,34 +104,69 @@ class Form(QDialog):
                     new_field.setText(self.values.get(name, ''))
                 elif isinstance(new_field, QSpinBox):
                     new_field.setValue(self.values.get(name, 0))
+                elif isinstance(new_field, QComboBox):
+                    new_field.setCurrentIndex(self.values['row_number'])
+
+            if type(new_field) is QComboBox:
+                if name == 'admin_id':
+                    for j, (value_index, value) in enumerate(self.admins.items()):
+                        new_field.addItem(value)
+                        if value == self.values.get('admin_id'):
+                            new_field.setCurrentIndex(j)
+
+                elif name == 'place_id':
+                    for j, (value_index, value) in enumerate(self.regions.items()):
+                        new_field.addItem(value)
+                        if value == self.values.get('place_id'):
+                            new_field.setCurrentIndex(j)
 
             if type(new_field) is not QSpinBox:
                 new_field: QTextEdit
                 new_field.setPlaceholderText(name)
 
-            if type(new_field) is QComboBox:
-                if name == 'admin_id':
-                    for value_index, value in self.admins.items():
-                        new_field.addItem(value)
-                elif name == 'place_id':
-                    for value_index, value in self.regions.items():
-                        new_field.addItem(value)
-
         submit = QPushButton(self)
         submit.setGeometry(0, (len(self.fields) + 3) * 70, 300, 70)
         submit.setStyleSheet(self.button_style)
-        submit.setText('Добавить')
+        submit.clicked.connect(self.ok_pressed)
+        submit.setText('Подтвердить')
 
     def ok_pressed(self):
-        self.close()
+        data = dict()
+        for key, widget in self.widgets.items():
+            if isinstance(widget, QTextEdit):
+                data[key] = widget.toPlainText()
+            elif isinstance(widget, QSpinBox):
+                data[key] = widget.value()
+            elif isinstance(widget, QComboBox):
+                data[key] = widget.currentText()
+
+        if 'id' in data:
+            # edit
+            if isinstance(self.parent.table, Hotel):
+                admins = {elem[1]: elem[0] for elem in Admins().get_units()}
+                regions = {elem[1]: elem[0] for elem in Regions().get_units()}
+                data['place_id'] = regions[data['place_id']]
+                data['admin_id'] = admins[data['admin_id']]
+
+            self.parent.table.update_unit_by_id(self.values['id'], data)
+            self.accept()
+        else:
+            if isinstance(self.parent.table, Hotel):
+                admins = {elem[1]: elem[0] for elem in Admins().get_units()}
+                regions = {elem[1]: elem[0] for elem in Regions().get_units()}
+                data['place_id'] = regions[data['place_id']]
+                data['admin_id'] = admins[data['admin_id']]
+
+            self.parent.table.add_unit(data)
+            self.accept()
 
 
 class DeleteForm(QDialog):
-    def __init__(self, data):
+    def __init__(self, text):
         super(DeleteForm, self).__init__()
         uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/form_delete.ui', self)
 
-        self.label_data.setText('\n'.join(data))
+        self.label_data.setText('\n'.join(text))
         self.button_ok.clicked.connect(self.on_click)
         self.button_cancel.clicked.connect(self.on_click)
 
@@ -137,4 +177,3 @@ class DeleteForm(QDialog):
             self.accept()
         elif self.sender() == self.button_cancel:
             self.reject()
-        # self.close()
