@@ -69,7 +69,7 @@ class Form(QDialog):
     def init_ui(self):
         self.setStyleSheet(self.widget_style)
         self.setWindowTitle('Add Unit')
-        self.setGeometry(0, 0, 300, (len(self.fields) + 4) * 70)
+        self.setGeometry(800, 300, 300, (len(self.fields) + 4) * 70)
         self.setWindowIcon(QIcon(f'{PROJECT_SOURCE_PATH_ICONS}/icon_light.png'))
         self.create_widgets()
 
@@ -96,7 +96,6 @@ class Form(QDialog):
                     new_field.setText(self.values.get(name, ''))
                 elif isinstance(new_field, QSpinBox):
                     new_field.setValue(self.values.get(name, ''))
-
 
             if type(new_field) is not QSpinBox:
                 new_field: QTextEdit
