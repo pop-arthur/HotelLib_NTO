@@ -1,6 +1,10 @@
 from sqlalchemy import (
-    Column, ForeignKey, Integer, MetaData, String, Table
+    Column, Date, ForeignKey, Integer,
+    MetaData, String, Table, Enum as sqlEnum,
+    Float
 )
+
+from enum import Enum, unique
 
 convention = {
     'all_column_names': lambda constraint, table: '_'.join([
@@ -16,6 +20,19 @@ convention = {
 metadata = MetaData(naming_convention=convention)
 
 
+@unique
+class TypeOfFood(Enum):
+    without = 'без питания'
+    three_times = '3-х разовое'
+    with_breakfast = 'С завтраком'
+
+
+@unique
+class TypeOfClient(Enum):
+    legal = 'юридическое  лицо'
+    individual = 'физическое лицо'
+
+
 hotels = Table(
     'hotels',
     metadata,
@@ -27,7 +44,6 @@ hotels = Table(
     Column('admin_id', Integer, ForeignKey('admins.id', ondelete='SET NULL'), nullable=True),
     Column('description', String(500), nullable=False),
 )
-
 
 regions = Table(
     'regions',
@@ -46,4 +62,37 @@ admins = Table(
     Column('role', String, nullable=False),
     Column('phone', String, nullable=False),
     Column('email', String, nullable=False),
+)
+
+tours = Table(
+    'tours',
+    metadata,
+
+    Column('id', Integer, primary_key=True, nullable=False),
+    Column('hotel_id', Integer, ForeignKey('hotels.id', ondelete='SET NULL'), nullable=True),
+    Column('date_start', Date, nullable=False),
+    Column('date_end', Date, nullable=False),
+    Column('days_count', Integer, nullable=False),
+    Column('type', sqlEnum(TypeOfFood, name='type_of_food'), nullable=False),
+    Column('tour_cost', Float(precision=2), nullable=False),
+    Column('description', String(500), nullable=False),
+)
+
+entities = Table(
+    'contact_face',
+    metadata,
+
+    Column('id', Integer, primary_key=True, nullable=False),
+    Column('phone', String, nullable=False),
+    Column('email', String, nullable=False),
+
+)
+
+clients = Table(
+    'clients',
+    metadata,
+
+    Column('id', Integer, primary_key=True, nullable=False),
+    Column('contact_face', Integer, ForeignKey('contact_face.id', ondelete='SET NULL'), nullable=True),
+    Column('type', sqlEnum(TypeOfClient, name='type_of_client'), nullable=False),
 )
