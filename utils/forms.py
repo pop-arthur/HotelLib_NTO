@@ -91,11 +91,14 @@ class Form(QDialog):
             new_field.setGeometry(0, 0, 300, 70)
             new_field.setStyleSheet(self.input_widget_style)
 
+            if name == 'id':
+                new_field.setEnabled(False)
+
             if self.values != {}:
                 if isinstance(new_field, QTextEdit):
                     new_field.setText(self.values.get(name, ''))
                 elif isinstance(new_field, QSpinBox):
-                    new_field.setValue(self.values.get(name, ''))
+                    new_field.setValue(self.values.get(name, 0))
 
             if type(new_field) is not QSpinBox:
                 new_field: QTextEdit
@@ -117,3 +120,21 @@ class Form(QDialog):
     def ok_pressed(self):
         self.close()
 
+
+class DeleteForm(QDialog):
+    def __init__(self, data):
+        super(DeleteForm, self).__init__()
+        uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/form_delete.ui', self)
+
+        self.label_data.setText('\n'.join(data))
+        self.button_ok.clicked.connect(self.on_click)
+        self.button_cancel.clicked.connect(self.on_click)
+
+        self.show()
+
+    def on_click(self):
+        if self.sender() == self.button_ok:
+            self.accept()
+        elif self.sender() == self.button_cancel:
+            self.reject()
+        # self.close()
