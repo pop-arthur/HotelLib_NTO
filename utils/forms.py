@@ -15,8 +15,10 @@ TYPE_TO_WIDGETS = {
 
 
 class Form(QDialog):
-    def __init__(self, parent: QDialog, fields: Dict, form_name: str, values={}):
+    def __init__(self, parent: QDialog, fields: Dict, form_name: str, values={}, window_title='Форма', headers=[]):
         super(Form, self).__init__()
+        self.setWindowTitle(window_title)
+        self.headers = headers
 
         self.fields = {key: TYPE_TO_WIDGETS[value] for key, value in fields.items()}
 
@@ -69,8 +71,7 @@ class Form(QDialog):
 
     def init_ui(self):
         self.setStyleSheet(self.widget_style)
-        self.setWindowTitle('Add Unit')
-        self.setGeometry(800, 300, 300, (len(self.fields) + 4) * 70)
+        self.setGeometry(0, 0, 300, (len(self.fields) + 4) * 70)
         self.setWindowIcon(QIcon(f'{PROJECT_SOURCE_PATH_ICONS}/icon_light.png'))
         self.create_widgets()
 
@@ -121,8 +122,10 @@ class Form(QDialog):
                             new_field.setCurrentIndex(j)
 
             if type(new_field) is not QSpinBox:
-                new_field: QTextEdit
-                new_field.setPlaceholderText(name)
+                if 'id' in self.fields.keys():
+                    new_field.setPlaceholderText(self.headers[i - 2])
+                else:
+                    new_field.setPlaceholderText(self.headers[i - 1])
 
         submit = QPushButton(self)
         submit.setGeometry(0, (len(self.fields) + 3) * 70, 300, 70)
@@ -165,6 +168,8 @@ class DeleteForm(QDialog):
     def __init__(self, text):
         super(DeleteForm, self).__init__()
         uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/form_delete.ui', self)
+        self.setWindowTitle('Удалить?')
+        self.setWindowIcon(QIcon(f'{PROJECT_SOURCE_PATH_ICONS}/icon_light.png'))
 
         self.label_data.setText('\n'.join(text))
         self.button_ok.clicked.connect(self.on_click)

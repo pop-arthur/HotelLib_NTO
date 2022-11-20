@@ -2,7 +2,7 @@ import sys
 
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QDialog, QTableWidget, QTableWidgetItem, QWidget
+from PyQt5.QtWidgets import QApplication, QDialog, QTableWidgetItem, QWidget
 
 from __config__ import *
 from utils.database.db import *
@@ -64,7 +64,7 @@ class TableViewWidget(QDialog):
 
         uic.loadUi(f'{PROJECT_SOURCE_PATH_UI}/day_data.ui', self)
 
-        self.setWindowTitle('Data')
+        self.setWindowTitle('Данные')
         self.setWindowIcon(QIcon(f'{PROJECT_SOURCE_PATH_ICONS}/icon_light.png'))
 
         self.pushButton.clicked.connect(self.ok_pressed)
@@ -112,7 +112,8 @@ class TableViewWidget(QDialog):
         if self.sender() == self.addButton:
 
             del form_data['id']
-            self.form = Form(self, form_data, self.table.__class__.__name__)
+            self.form = Form(self, form_data, self.table.__class__.__name__, window_title='Добавить',
+                             headers=self.headers)
             self.form.show()
 
             if self.form.exec():
@@ -130,7 +131,8 @@ class TableViewWidget(QDialog):
             values['id'] = int(values['id'])
             values['row_number'] = row_number
 
-            self.form = Form(self, form_data, self.table.__class__.__name__, values)
+            self.form = Form(self, form_data, self.table.__class__.__name__, values, window_title='Редактировать',
+                             headers=self.headers)
             self.form.show()
 
             if self.form.exec():
