@@ -58,9 +58,8 @@ admins = Table(
     metadata,
 
     Column('id', Integer, primary_key=True, nullable=False),
-    Column('full_name', String, nullable=False),
     Column('role', String, nullable=False),
-    # Column('entity_id', Integer, ForeignKey('entities.id', ondelete='SET NULL'), nullable=True),
+    Column('entity_id', Integer, ForeignKey('entities.id', ondelete='SET NULL'), nullable=True),
 
 )
 
@@ -72,7 +71,7 @@ tours = Table(
     Column('hotel_id', Integer, ForeignKey('hotels.id', ondelete='SET NULL'), nullable=True),
     Column('date_start', Date, nullable=False),
     Column('date_end', Date, nullable=False),
-    Column('days_count', Integer, nullable=False),
+    Column('days', String(), nullable=False),
     Column('type', sqlEnum(TypeOfFood, name='type_of_food'), nullable=False),
     Column('tour_cost', Float(precision=2), nullable=False),
     Column('description', String(500), nullable=False),
@@ -85,6 +84,7 @@ entities = Table(
     Column('id', Integer, primary_key=True, nullable=False),
     Column('phone', String, nullable=False),
     Column('email', String, nullable=False),
+    Column('full_name', String, nullable=False),
 
 )
 
@@ -93,6 +93,6 @@ clients = Table(
     metadata,
 
     Column('id', Integer, primary_key=True, nullable=False),
-    Column('contact_face', Integer, ForeignKey('entities.id', ondelete='SET NULL'), nullable=True),
+    Column('entity_id', Integer, ForeignKey('entities.id', ondelete='SET NULL'), nullable=True),
     Column('type', sqlEnum(TypeOfClient, name='type_of_client'), nullable=False),
 )

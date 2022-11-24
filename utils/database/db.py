@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict
+from typing import Any, List, Tuple, Dict
 
 from sqlalchemy import create_engine, delete, insert, Table, select, update
 from sqlalchemy.engine import Connection, Row
@@ -85,9 +85,7 @@ class Unit:
         )
 
     def get_units(self) -> List[Row]:
-        return self.get_session().execute(
-            select(self.table)
-        ).all()
+        return self.get_session().execute(select(self.table)).all()
 
     def delete_unit(self, unit_id: int) -> int:
         """
@@ -126,7 +124,15 @@ class Hotel(Unit):
     admin_indexes = [7, 8, 9, 10]
     region_indexes = [12]
 
-    def get_pretty_units(self) -> Tuple[List, List, List]:
+    def get_units(self):
+        join_rows = self.get_session().execute(
+            self.join_all_connected_tables(select(
+                self.table, Admins.table, Regions.table, Entities.table
+            ))
+        ).all()
+        return list(map(lambda x: [x[0], x[1], x[10], x[3], x[14], x[5]], join_rows))
+
+    def get_pretty_units(self) -> List[List[Any]]:
         join_rows = self.get_session().execute(
             self.join_all_connected_tables(select(
                 self.table, Admins.table, Regions.table, Entities.table
@@ -169,7 +175,7 @@ class Admins(Unit):
     table = admins
 
     def join_entities(self, sql_request):
-        return sql_request.join(Entities.table, self.table.c.contact_face == Entities.table.c.id)
+        return sql_request.join(Entities.table, self.table.c.entity_id == Entities.table.c.id)
 
     def get_units(self):
         return self.get_session().execute(
@@ -184,6 +190,15 @@ class Regions(Unit):
 class Tours(Unit):
     table = tours
 
+    def join_hotels(self, sql_request):
+        return sql_request.join(Hotel.table, self.table.c.hotel_id == Hotel.table.c.id)
+
+    def get_units(self) -> List[List[Any]]:
+        return list(map(lambda x: [x[0], x[9]] + list(x[2:8]), self.get_session().execute(
+            self.join_hotels(select(self.table, Hotel.table))
+        ).all()))
+
+
 
 class Entities(Unit):
     table = entities
@@ -193,7 +208,7 @@ class Clients(Unit):
     table = clients
 
     def join_entities(self, sql_request):
-        return sql_request.join(Entities.table, self.table.c.contact_face == Entities.table.c.id)
+        return sql_request.join(Entities.table, self.table.c.entity_id == Entities.table.c.id)
 
     def get_units(self):
         return self.get_session().execute(

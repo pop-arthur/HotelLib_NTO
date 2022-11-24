@@ -1,16 +1,21 @@
+from datetime import datetime
 from typing import Dict
 
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QStyle, QTextEdit, QSpinBox, QComboBox, QWidget
+from PyQt5.QtWidgets import (
+    QComboBox, QDateEdit, QDialog, QLabel,
+    QPushButton, QSpinBox, QTextEdit, QWidget,
+    QDoubleSpinBox
+)
 
 from __config__ import PROJECT_SOURCE_PATH_ICONS, PROJECT_SOURCE_PATH_UI
-from utils.database.db import Admins, Regions, Hotel
+from utils.database.db import Admins, Clients, Entities, Hotel, Regions, Tours
 
 TYPE_TO_WIDGETS = {
-    int: QSpinBox,
-    str: QTextEdit,
-    list: QComboBox
+    int: QSpinBox, str: QTextEdit,
+    list: QComboBox, datetime: QDateEdit,
+    float: QDoubleSpinBox
 }
 
 
@@ -22,9 +27,10 @@ class Form(QDialog):
 
         self.fields = {key: TYPE_TO_WIDGETS[value] for key, value in fields.items()}
 
-        self.parent = parent
         self.regions = None
         self.admins = None
+
+        self.parent = parent
         self.values = values
 
         if self.fields.get('place_id'):
@@ -105,27 +111,42 @@ class Form(QDialog):
                     new_field.setText(self.values.get(name, ''))
                 elif isinstance(new_field, QSpinBox):
                     new_field.setValue(self.values.get(name, 0))
-                elif isinstance(new_field, QComboBox):
-                    new_field.setCurrentIndex(self.values['row_number'])
+                elif isinstance(new_field, QDoubleSpinBox):
+                    new_field.setValue(self.values.get(name, 0.0))
+                # elif isinstance(new_field, QComboBox):
+                #     new_field.setCurrentIndex(self.values['row_number'])
 
             if type(new_field) is QComboBox:
+
+                data = {}
                 if name == 'admin_id':
-                    for j, (value_index, value) in enumerate(self.admins.items()):
-                        new_field.addItem(value)
-                        if value == self.values.get('admin_id'):
-                            new_field.setCurrentIndex(j)
-
+                    data = {unit[0]: unit[6] for unit in Admins().get_units()}
                 elif name == 'place_id':
-                    for j, (value_index, value) in enumerate(self.regions.items()):
-                        new_field.addItem(value)
-                        if value == self.values.get('place_id'):
-                            new_field.setCurrentIndex(j)
+                    data = {unit_id: region_name for unit_id, region_name in Regions().get_units()}
+                elif name == 'hotel_id':
+                    data = {unit[0]: unit[1] for unit in Hotel().get_units()}
+                elif name == 'entity_id':
+                    data = {unit[0]: unit[6] for unit in Entities().get_units()}
+                elif name == 'type':
+                    if isinstance(self.parent.table, Clients):
+                        data = {'legal': 'юридическое  лицо', 'individual': 'физическое лицо'}
+                    elif isinstance(self.parent.table, Tours):
+                        data = {
+                            'without': 'без питания',
+                            'with_breakfast': 'С завтраком',
+                            'three_times': '3-х разовое',
+                        }
 
-            if type(new_field) is not QSpinBox:
+                for j, (value_index, value) in enumerate(data.items()):
+                    new_field.addItem(value)
+                    if value == self.values.get(name):
+                        new_field.setCurrentIndex(j)
+
+            if type(new_field) not in [QSpinBox, QDoubleSpinBox, QDateEdit]:
                 if 'id' in self.fields.keys():
                     new_field.setPlaceholderText(self.headers[i - 2])
                 else:
-                    new_field.setPlaceholderText(self.headers[i - 1])
+                    new_field.setPlaceholderText(self.headers[(i - 1)])
 
         submit = QPushButton(self)
         submit.setGeometry(0, (len(self.fields) + 3) * 70, 300, 70)
@@ -134,32 +155,49 @@ class Form(QDialog):
         submit.setText('Подтвердить')
 
     def ok_pressed(self):
+
+        admins = {elem[6]: elem[0] for elem in Admins().get_units()}
+        regions = {elem[1]: elem[0] for elem in Regions().get_units()}
+        entities = {elem[3]: elem[0] for elem in Entities().get_units()}
+        hotels = {elem[1]: elem[0] for elem in Hotel().get_units()}
+        print(hotels)
+        tables = {
+            'admin_id': admins,
+            'place_id': regions,
+            'entity_id': entities,
+            'hotel_id': hotels,
+        }
+
         data = dict()
         for key, widget in self.widgets.items():
             if isinstance(widget, QTextEdit):
                 data[key] = widget.toPlainText()
             elif isinstance(widget, QSpinBox):
                 data[key] = widget.value()
+            elif isinstance(widget, QDoubleSpinBox):
+                data[key] = widget.value()
+            elif isinstance(widget, QDateEdit):
+                data[key] = datetime.strptime(widget.dateTime().toString('yyyy.MM.dd'), '%Y.%m.%d')
             elif isinstance(widget, QComboBox):
-                data[key] = widget.currentText()
+                if key != 'type':
+                    data[key] = tables[key][widget.currentText()]
+                else:
+                    if isinstance(self.parent.table, Clients):
+                        data[key] = {'юридическое  лицо': 'legal', 'физическое лицо': 'individual'}[
+                            widget.currentText()
+                        ]
+                    elif isinstance(self.parent.table, Tours):
+                        data[key] = {
+                            'без питания': 'without',
+                            'С завтраком': 'with_breakfast',
+                            '3-х разовое': 'three_times'
+                        }[widget.currentText()]
 
         if 'id' in data:
             # edit
-            if isinstance(self.parent.table, Hotel):
-                admins = {elem[1]: elem[0] for elem in Admins().get_units()}
-                regions = {elem[1]: elem[0] for elem in Regions().get_units()}
-                data['place_id'] = regions[data['place_id']]
-                data['admin_id'] = admins[data['admin_id']]
-
             self.parent.table.update_unit_by_id(self.values['id'], data)
             self.accept()
         else:
-            if isinstance(self.parent.table, Hotel):
-                admins = {elem[1]: elem[0] for elem in Admins().get_units()}
-                regions = {elem[1]: elem[0] for elem in Regions().get_units()}
-                data['place_id'] = regions[data['place_id']]
-                data['admin_id'] = admins[data['admin_id']]
-
             self.parent.table.add_unit(data)
             self.accept()
 

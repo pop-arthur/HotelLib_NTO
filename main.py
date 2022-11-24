@@ -12,14 +12,14 @@ from utils.forms import Form, DeleteForm
 sys._excepthook = sys.excepthook
 
 headers_full = ['ID', 'Название', 'Местонахождение', 'Номер телефона', 'Управляющий', 'Описание']
-headers_admins = ['ID', 'ФИО', 'Роль', 'Номер телефона', 'Email']
+headers_admins = ['ID', 'Роль', 'ФИО']
 headers_regions = ['ID', 'Регион']
 
 headers_tours = [
     'ID', 'Отель', 'Дата Заезда', 'Дата Выезда', 'Время прибывания',
     'Тип Еды', 'Стоимость Тура', 'Описание'
 ]
-headers_entities = ['ID', 'Телефон', 'Почта']
+headers_entities = ['ID', 'Телефон', 'Почта', 'ФИО']
 headers_clients = ['ID', 'Контактное Лицо', 'Тип Клиента']
 
 CONVERTED_TYPES = {
@@ -27,6 +27,7 @@ CONVERTED_TYPES = {
     'INTEGER': int,
     'String': str,
     'VARCHAR': str,
+    'FLOAT': float
 }
 
 HOTEL_MANAGER = Hotel()
@@ -105,8 +106,9 @@ class TableViewWidget(QDialog):
 
     def init_table(self):
         data = self.table.get_units()
-        if isinstance(self.table, Hotel):
-            data = self.table.get_pretty_units()
+        print(data)
+        # if isinstance(self.table, Hotel):
+        #     data = self.table.get_pretty_units()
 
         self.tableWidget.clear()
         self.tableWidget.setColumnCount(len(self.headers))
@@ -137,12 +139,21 @@ class TableViewWidget(QDialog):
             form_data['place_id'] = list
         if form_data.get('admin_id'):
             form_data['admin_id'] = list
+        if form_data.get('entity_id'):
+            form_data['entity_id'] = list
+        if form_data.get('hotel_id'):
+            form_data['hotel_id'] = list
+        if form_data.get('type'):
+            form_data['type'] = list
+
+        print(form_data)
 
         if self.sender() == self.addButton:
 
             del form_data['id']
-            self.form = Form(self, form_data, self.table.__class__.__name__, window_title='Добавить',
-                             headers=self.headers)
+            self.form = Form(
+                self, form_data, self.table.__class__.__name__, window_title='Добавить', headers=self.headers
+            )
             self.form.show()
 
             if self.form.exec():
@@ -160,8 +171,10 @@ class TableViewWidget(QDialog):
             values['id'] = int(values['id'])
             values['row_number'] = row_number
 
-            self.form = Form(self, form_data, self.table.__class__.__name__, values, window_title='Редактировать',
-                             headers=self.headers)
+            self.form = Form(
+                self, form_data, self.table.__class__.__name__, values, window_title='Редактировать',
+                headers=self.headers
+            )
             self.form.show()
 
             if self.form.exec():
