@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
@@ -14,7 +15,15 @@ headers_full = ['ID', 'Название', 'Местонахождение', 'Н�
 headers_admins = ['ID', 'ФИО', 'Роль', 'Номер телефона', 'Email']
 headers_regions = ['ID', 'Регион']
 
+headers_tours = [
+    'ID', 'Отель', 'Дата Заезда', 'Дата Выезда', 'Время прибывания',
+    'Тип Еды', 'Стоимость Тура', 'Описание'
+]
+headers_entities = ['ID', 'Телефон', 'Почта']
+headers_clients = ['ID', 'Контактное Лицо', 'Тип Клиента']
+
 CONVERTED_TYPES = {
+    'DATE': datetime,
     'INTEGER': int,
     'String': str,
     'VARCHAR': str,
@@ -23,6 +32,10 @@ CONVERTED_TYPES = {
 HOTEL_MANAGER = Hotel()
 ADMIN_MANAGER = Admins()
 REGION_MANAGER = Regions()
+
+TOURS_MANAGER = Tours()
+ENTITIES_MANAGER = Entities()
+CLIENTS_MANAGER = Clients()
 
 
 class HomePage(QWidget):
@@ -33,21 +46,37 @@ class HomePage(QWidget):
         self.setWindowIcon(QIcon(f'{PROJECT_SOURCE_PATH_ICONS}/icon_dark.png'))
 
         # self.pushButton_full.clicked.connect(self.pressed)
-        self.pushButton_admins.clicked.connect(self.pressed)
-        self.pushButton_regions.clicked.connect(self.pressed)
-        self.pushButton_hotels.clicked.connect(self.pressed)
+        # self.pushButton_admins.clicked.connect(self.pressed)
+        # self.pushButton_regions.clicked.connect(self.pressed)
+        # self.pushButton_hotels.clicked.connect(self.pressed)
+        self.open_table.clicked.connect(self.pressed)
+        self.table_names = [
+            'Таблица Отели', 'Таблица Регионы',
+            'Таблица Управляющие', 'Таблица Контактные лица',
+            'Таблица Клиенты', 'Таблица Туры'
+        ]
 
         self.show()
 
     def pressed(self):
         # if self.sender() == self.pushButton_full:
         #     self.table_view = TableViewWidget(headers_full, HOTEL_MANAGER)
-        if self.sender() == self.pushButton_hotels:
-            self.table_view = TableViewWidget(headers_full, HOTEL_MANAGER)
-        elif self.sender() == self.pushButton_admins:
-            self.table_view = TableViewWidget(headers_admins, ADMIN_MANAGER)
-        elif self.sender() == self.pushButton_regions:
-            self.table_view = TableViewWidget(headers_regions, REGION_MANAGER)
+
+        text = self.comboBox.currentText().strip()
+
+        match text:
+            case ('Таблица Отели'):
+                self.table_view = TableViewWidget(headers_full, HOTEL_MANAGER)
+            case ('Таблица Регионы'):
+                self.table_view = TableViewWidget(headers_regions, REGION_MANAGER)
+            case ('Таблица Управляющие'):
+                self.table_view = TableViewWidget(headers_admins, ADMIN_MANAGER)
+            case ('Таблица Контактные лица'):
+                self.table_view = TableViewWidget(headers_entities, ENTITIES_MANAGER)
+            case ('Таблица Клиенты'):
+                self.table_view = TableViewWidget(headers_clients, CLIENTS_MANAGER)
+            case ('Таблица Туры'):
+                self.table_view = TableViewWidget(headers_tours, TOURS_MANAGER)
 
         self.table_view.show()
 

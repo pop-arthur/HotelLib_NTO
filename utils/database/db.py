@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, delete, insert, Table, select, update
 from sqlalchemy.engine import Connection, Row
 
 from __config__ import PROJECT_SOURCE_PATH_DB
-from utils.database.schema import admins, hotels, regions
+from utils.database.schema import admins, clients, entities, hotels, regions, tours
 
 database_path: str = f"sqlite:///{PROJECT_SOURCE_PATH_DB}/database.db"
 engine = create_engine(database_path)
@@ -73,6 +73,17 @@ class Unit:
             select(self.table).where(self.table.c.id == unit_id)
         ).one()
 
+    def update_unit_by_id(self, unit_id: int, vals: Dict) -> None:
+        """
+        :param unit_id: ID of the unit
+        :param vals: Dict with data to update unit
+        :return: unit
+        """
+
+        self.get_session().execute(
+            update(self.table).where(self.table.c.id == unit_id).values(**vals)
+        )
+
     def get_units(self) -> List[Row]:
         return self.get_session().execute(
             select(self.table)
@@ -118,7 +129,7 @@ class Hotel(Unit):
     def get_pretty_units(self) -> Tuple[List, List, List]:
         join_rows = self.get_session().execute(
             self.join_all_connected_tables(select(
-                self.table, Admins.table, Regions.table
+                self.table, Admins.table, Regions.table, Entities.table
             ))
         ).all()
 
@@ -141,10 +152,7 @@ class Hotel(Unit):
         return sql_request.join(Regions.table, self.table.c.place_id == Regions.table.c.id)
 
     def join_all_connected_tables(self, sql_request):
-        sql_request = self.join_regions(sql_request)
-        sql_request = self.join_admins(sql_request)
-
-        return sql_request
+        return self.join_admins(self.join_regions(sql_request))
 
     def join_admins(self, sql_request):
         """
@@ -152,12 +160,42 @@ class Hotel(Unit):
         :return:
         """
 
-        return sql_request.join(Admins.table, self.table.c.admin_id == Admins.table.c.id)
+        return sql_request.join(Admins.table, self.table.c.admin_id == Admins.table.c.id).join(
+            Entities.table, Admins.table.c.entity_id == Entities.table.c.id
+        )
 
 
 class Admins(Unit):
     table = admins
 
+    def join_entities(self, sql_request):
+        return sql_request.join(Entities.table, self.table.c.contact_face == Entities.table.c.id)
+
+    def get_units(self):
+        return self.get_session().execute(
+            self.join_entities(select(self.table, Entities.table))
+        ).all()
+
 
 class Regions(Unit):
     table = regions
+
+
+class Tours(Unit):
+    table = tours
+
+
+class Entities(Unit):
+    table = entities
+
+
+class Clients(Unit):
+    table = clients
+
+    def join_entities(self, sql_request):
+        return sql_request.join(Entities.table, self.table.c.contact_face == Entities.table.c.id)
+
+    def get_units(self):
+        return self.get_session().execute(
+            self.join_entities(select(self.table, Entities.table))
+        ).all()

@@ -52,40 +52,12 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_admins">
+  <widget class="QPushButton" name="open_table">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>500</y>
-     <width>350</width>
-     <height>50</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Open Sans</family>
-     <pointsize>18</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QPushButton
-{
-	color: #000000;
-	text-shadow: 0px 0px 50px #FFFFFF;
-	background-color: #6CF1DA;
-	border-radius: 10px;
-}</string>
-   </property>
-   <property name="text">
-    <string>Таблица Управляющих</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_regions">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
+     <x>560</x>
      <y>430</y>
-     <width>350</width>
+     <width>391</width>
      <height>50</height>
     </rect>
    </property>
@@ -97,6 +69,9 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
      <bold>false</bold>
     </font>
    </property>
+   <property name="cursor">
+    <cursorShape>OpenHandCursor</cursorShape>
+   </property>
    <property name="styleSheet">
     <string notr="true">QPushButton
 {
@@ -104,10 +79,11 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
 	text-shadow: 0px 0px 50px #FFFFFF;
 	background-color: #6CF1DA;
 	border-radius: 10px;
+	cursor: pointer;
 }</string>
    </property>
    <property name="text">
-    <string>Таблица Регионов</string>
+    <string>Открыть</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -167,12 +143,12 @@ background-color: transparent;
     <string>Cyber Vegetables</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_hotels">
+  <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>370</y>
-     <width>350</width>
+     <x>559</x>
+     <y>360</y>
+     <width>391</width>
      <height>50</height>
     </rect>
    </property>
@@ -180,19 +156,102 @@ background-color: transparent;
     <font>
      <family>Open Sans</family>
      <pointsize>18</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>OpenHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #000000;
+text-shadow: 0px 0px 50px #FFFFFF;
+background-color: #6CF1DA;
+border-radius: 10px;
+padding-left: 20px;
+text-align: center;</string>
+   </property>
+   <property name="sizeAdjustPolicy">
+    <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+   </property>
+   <item>
+    <property name="text">
+     <string>Таблица Отели</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Таблица Регионы</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Таблица Управляющие</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Таблица Контактные лица</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Таблица Клиенты</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Таблица Туры</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>360</y>
+     <width>256</width>
+     <height>256</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>SizeBDiagCursor</cursorShape>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>../icons/qr_code.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="plainTextEdit">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>300</y>
+     <width>256</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton
-{
-	color: #000000;
-	text-shadow: 0px 0px 50px #FFFFFF;
-	background-color: #6CF1DA;
-	border-radius: 10px;
-}</string>
+    <string notr="true">color: #FFFFFF;
+background-color: transparent;
+text-shadow: 0px 0px 50px #FFFFFF;
+border: none;</string>
    </property>
-   <property name="text">
-    <string>Таблица Отелей</string>
+   <property name="plainText">
+    <string>Прочитать про структуру БД можно тут:</string>
    </property>
   </widget>
  </widget>

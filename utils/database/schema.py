@@ -60,8 +60,8 @@ admins = Table(
     Column('id', Integer, primary_key=True, nullable=False),
     Column('full_name', String, nullable=False),
     Column('role', String, nullable=False),
-    Column('phone', String, nullable=False),
-    Column('email', String, nullable=False),
+    # Column('entity_id', Integer, ForeignKey('entities.id', ondelete='SET NULL'), nullable=True),
+
 )
 
 tours = Table(
@@ -79,7 +79,7 @@ tours = Table(
 )
 
 entities = Table(
-    'contact_face',
+    'entities',
     metadata,
 
     Column('id', Integer, primary_key=True, nullable=False),
@@ -93,6 +93,6 @@ clients = Table(
     metadata,
 
     Column('id', Integer, primary_key=True, nullable=False),
-    Column('contact_face', Integer, ForeignKey('contact_face.id', ondelete='SET NULL'), nullable=True),
+    Column('contact_face', Integer, ForeignKey('entities.id', ondelete='SET NULL'), nullable=True),
     Column('type', sqlEnum(TypeOfClient, name='type_of_client'), nullable=False),
 )
