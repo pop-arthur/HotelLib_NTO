@@ -47,7 +47,7 @@ QPushButton
      <property name="font">
       <font>
        <family>Open Sans</family>
-       <pointsize>9</pointsize>
+       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -62,22 +62,23 @@ QPushButton
 	border: none;
 }
 
-QHeaderView, QHeaderView::section, QHeaderView:focus {
-    background-color: &quot;#6cf2da&quot;;
-	cellspacing: 0;
-	cellpadding: 0;
-	opacity: 10;
+QTableWidget::cellActivated {
+	color: rgb(255, 255, 255);
 }
 
-QTableWidget::item {
+QHeaderView, QHeaderView::section, QHeaderView:focus {
+    background-color: #FF0E6C;
+	cellspacing: 0;
+	cellpadding: 0;
+color: #fff;
+}
+
+QTableWidget::item, QTableWidget::item:focus {
 	color: rgba(255, 255, 255, 255);
 	cellspacing: 0;
 	cellpadding: 0;
-	opacity: 10;
-	border: 1px solid &quot;#6cf2da&quot;;
-}
-QTableWidget::item:focus {
-	border: 5px solid &quot;#6cf2da&quot;;
+
+	border: 1px solid #FF0E6C;
 }</string>
      </property>
      <property name="frameShape">
@@ -86,11 +87,11 @@ QTableWidget::item:focus {
      <attribute name="horizontalHeaderCascadingSectionResizes">
       <bool>true</bool>
      </attribute>
-     <attribute name="horizontalHeaderDefaultSectionSize">
-      <number>110</number>
-     </attribute>
      <attribute name="horizontalHeaderMinimumSectionSize">
       <number>50</number>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>110</number>
      </attribute>
      <attribute name="horizontalHeaderStretchLastSection">
       <bool>true</bool>
@@ -98,10 +99,10 @@ QTableWidget::item:focus {
      <attribute name="verticalHeaderCascadingSectionResizes">
       <bool>true</bool>
      </attribute>
-     <attribute name="verticalHeaderDefaultSectionSize">
+     <attribute name="verticalHeaderMinimumSectionSize">
       <number>50</number>
      </attribute>
-     <attribute name="verticalHeaderMinimumSectionSize">
+     <attribute name="verticalHeaderDefaultSectionSize">
       <number>50</number>
      </attribute>
      <attribute name="verticalHeaderStretchLastSection">
@@ -154,15 +155,20 @@ QTableWidget::item:focus {
         <string notr="true">QPushButton
 {
 	text-shadow: 0px 0px 50px #FFFFFF;
-	background-color: #6CF1DA;
+	color: #ffffff;
+	background-color: #FF0E6C;
 	border-radius: 15;
-    margin: 10px 0;
 	height: 30px;
+	transition-timing-function: linear;
 }
-</string>
+QPushButton::hover
+{
+	background-color: #fff;
+	color: #000;
+}</string>
        </property>
        <property name="text">
-        <string>Назад</string>
+        <string>Back</string>
        </property>
       </widget>
      </item>
@@ -199,14 +205,21 @@ QTableWidget::item:focus {
         <string notr="true">QPushButton
 {
 	text-shadow: 0px 0px 50px #FFFFFF;
-	background-color: #6CF1DA;
+	color: #ffffff;
+	background-color: #FF0E6C;
 	border-radius: 15;
-    margin: 10px 0x;
+    margin: 10px 10px;
 	height: 30px;
+	transition-timing-function: linear;
+}
+QPushButton::hover
+{
+	background-color: #fff;
+	color: #000;
 }</string>
        </property>
        <property name="text">
-        <string>Добавить</string>
+        <string>Add</string>
        </property>
       </widget>
      </item>
@@ -214,7 +227,7 @@ QTableWidget::item:focus {
       <widget class="QPushButton" name="editButton">
        <property name="minimumSize">
         <size>
-         <width>150</width>
+         <width>120</width>
          <height>30</height>
         </size>
        </property>
@@ -230,14 +243,21 @@ QTableWidget::item:focus {
         <string notr="true">QPushButton
 {
 	text-shadow: 0px 0px 50px #FFFFFF;
-	background-color: #6CF1DA;
+	color: #ffffff;
+	background-color: #FF0E6C;
 	border-radius: 15;
     margin: 10px 10px;
 	height: 30px;
+	transition-timing-function: linear;
+}
+QPushButton::hover
+{
+	background-color: #fff;
+	color: #000;
 }</string>
        </property>
        <property name="text">
-        <string>Редактировать</string>
+        <string>Edit</string>
        </property>
       </widget>
      </item>
@@ -261,14 +281,21 @@ QTableWidget::item:focus {
         <string notr="true">QPushButton
 {
 	text-shadow: 0px 0px 50px #FFFFFF;
-	background-color: #6CF1DA;
+	color: #ffffff;
+	background-color: #FF0E6C;
 	border-radius: 15;
-    margin: 10px 0;
+    margin: 10px 10px;
 	height: 30px;
+	transition-timing-function: linear;
+}
+QPushButton::hover
+{
+	background-color: #fff;
+	color: #000;
 }</string>
        </property>
        <property name="text">
-        <string>Удалить</string>
+        <string>Remove</string>
        </property>
       </widget>
      </item>

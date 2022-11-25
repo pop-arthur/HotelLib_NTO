@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, delete, insert, Table, select, update
 from sqlalchemy.engine import Connection, Row
 
 from __config__ import PROJECT_SOURCE_PATH_DB
-from utils.database.schema import admins, clients, entities, hotels, regions, tours
+from utils.database.schema import admins, clients, entities, hotels, regions, tours, TypeOfClient, TypeOfFood
 
 database_path: str = f"sqlite:///{PROJECT_SOURCE_PATH_DB}/database.db"
 engine = create_engine(database_path)
@@ -178,9 +178,10 @@ class Admins(Unit):
         return sql_request.join(Entities.table, self.table.c.entity_id == Entities.table.c.id)
 
     def get_units(self):
-        return self.get_session().execute(
-            self.join_entities(select(self.table, Entities.table))
-        ).all()
+        return list(map(
+            lambda x: [x[0], x[1]] + list(x[4:]),
+            self.get_session().execute(self.join_entities(select(self.table, Entities.table))).all())
+        )
 
 
 class Regions(Unit):
@@ -189,15 +190,16 @@ class Regions(Unit):
 
 class Tours(Unit):
     table = tours
+    convert_types: dict = {e.name: e.value for e in TypeOfClient}
 
     def join_hotels(self, sql_request):
         return sql_request.join(Hotel.table, self.table.c.hotel_id == Hotel.table.c.id)
 
     def get_units(self) -> List[List[Any]]:
-        return list(map(lambda x: [x[0], x[9]] + list(x[2:8]), self.get_session().execute(
-            self.join_hotels(select(self.table, Hotel.table))
-        ).all()))
-
+        return list(map(
+            lambda x: [x[0], x[9]] + list(x[2:5]) + [x[5].value] + list(x[6:8]),
+            self.get_session().execute(self.join_hotels(select(self.table, Hotel.table))).all())
+        )
 
 
 class Entities(Unit):
@@ -206,11 +208,13 @@ class Entities(Unit):
 
 class Clients(Unit):
     table = clients
+    convert_types: dict = {e.name: e.value for e in TypeOfFood}
 
     def join_entities(self, sql_request):
         return sql_request.join(Entities.table, self.table.c.entity_id == Entities.table.c.id)
 
     def get_units(self):
-        return self.get_session().execute(
-            self.join_entities(select(self.table, Entities.table))
-        ).all()
+        return list(map(
+            lambda x: list(x[0:2]) + [x[2].value] + list(x[4:]),
+            self.get_session().execute(self.join_entities(select(self.table, Entities.table))).all())
+        )

@@ -65,8 +65,9 @@ class Form(QDialog):
                 font-size: 24px;
                 """
         self.button_style = """	
+                color: #ffffff;
                 text-shadow: 0px 0px 50px #FFFFFF;
-                background-color: #6CF1DA;
+                background-color: #FF0E6C;
                 border-radius: 15;
                 margin: 10px;
                 height: 30px;
@@ -112,21 +113,19 @@ class Form(QDialog):
                 elif isinstance(new_field, QSpinBox):
                     new_field.setValue(self.values.get(name, 0))
                 elif isinstance(new_field, QDoubleSpinBox):
-                    new_field.setValue(self.values.get(name, 0.0))
-                # elif isinstance(new_field, QComboBox):
-                #     new_field.setCurrentIndex(self.values['row_number'])
+                    new_field.setValue(float(self.values.get(name, 0.0)))
 
             if type(new_field) is QComboBox:
 
                 data = {}
                 if name == 'admin_id':
-                    data = {unit[0]: unit[6] for unit in Admins().get_units()}
+                    data = {unit[0]: unit[4] for unit in Admins().get_units()}
                 elif name == 'place_id':
                     data = {unit_id: region_name for unit_id, region_name in Regions().get_units()}
                 elif name == 'hotel_id':
                     data = {unit[0]: unit[1] for unit in Hotel().get_units()}
                 elif name == 'entity_id':
-                    data = {unit[0]: unit[6] for unit in Entities().get_units()}
+                    data = {unit[0]: unit[3] for unit in Entities().get_units()}
                 elif name == 'type':
                     if isinstance(self.parent.table, Clients):
                         data = {'legal': 'юридическое  лицо', 'individual': 'физическое лицо'}
@@ -156,11 +155,11 @@ class Form(QDialog):
 
     def ok_pressed(self):
 
-        admins = {elem[6]: elem[0] for elem in Admins().get_units()}
+        admins = {elem[4]: elem[0] for elem in Admins().get_units()}
         regions = {elem[1]: elem[0] for elem in Regions().get_units()}
         entities = {elem[3]: elem[0] for elem in Entities().get_units()}
         hotels = {elem[1]: elem[0] for elem in Hotel().get_units()}
-        print(hotels)
+
         tables = {
             'admin_id': admins,
             'place_id': regions,
