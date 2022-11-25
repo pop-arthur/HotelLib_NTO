@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
@@ -11,18 +12,31 @@ from utils.forms import Form, DeleteForm
 sys._excepthook = sys.excepthook
 
 headers_full = ['ID', 'Название', 'Местонахождение', 'Номер телефона', 'Управляющий', 'Описание']
-headers_admins = ['ID', 'ФИО', 'Роль', 'Номер телефона', 'Email']
+headers_admins = ['ID', 'Роль', 'ФИО']
 headers_regions = ['ID', 'Регион']
 
+headers_tours = [
+    'ID', 'Отель', 'Дата Заезда', 'Дата Выезда', 'Время прибывания',
+    'Тип Еды', 'Стоимость Тура', 'Описание'
+]
+headers_entities = ['ID', 'Телефон', 'Почта', 'ФИО']
+headers_clients = ['ID', 'Контактное Лицо', 'Тип Клиента']
+
 CONVERTED_TYPES = {
+    'DATE': datetime,
     'INTEGER': int,
     'String': str,
     'VARCHAR': str,
+    'FLOAT': float
 }
 
 HOTEL_MANAGER = Hotel()
 ADMIN_MANAGER = Admins()
 REGION_MANAGER = Regions()
+
+TOURS_MANAGER = Tours()
+ENTITIES_MANAGER = Entities()
+CLIENTS_MANAGER = Clients()
 
 
 class HomePage(QWidget):
@@ -33,21 +47,37 @@ class HomePage(QWidget):
         self.setWindowIcon(QIcon(f'{PROJECT_SOURCE_PATH_ICONS}/icon_dark.png'))
 
         # self.pushButton_full.clicked.connect(self.pressed)
-        self.pushButton_admins.clicked.connect(self.pressed)
-        self.pushButton_regions.clicked.connect(self.pressed)
-        self.pushButton_hotels.clicked.connect(self.pressed)
+        # self.pushButton_admins.clicked.connect(self.pressed)
+        # self.pushButton_regions.clicked.connect(self.pressed)
+        # self.pushButton_hotels.clicked.connect(self.pressed)
+        self.open_table.clicked.connect(self.pressed)
+        self.table_names = [
+            'Таблица Отели', 'Таблица Регионы',
+            'Таблица Управляющие', 'Таблица Контактные лица',
+            'Таблица Клиенты', 'Таблица Туры'
+        ]
 
         self.show()
 
     def pressed(self):
         # if self.sender() == self.pushButton_full:
         #     self.table_view = TableViewWidget(headers_full, HOTEL_MANAGER)
-        if self.sender() == self.pushButton_hotels:
-            self.table_view = TableViewWidget(headers_full, HOTEL_MANAGER)
-        elif self.sender() == self.pushButton_admins:
-            self.table_view = TableViewWidget(headers_admins, ADMIN_MANAGER)
-        elif self.sender() == self.pushButton_regions:
-            self.table_view = TableViewWidget(headers_regions, REGION_MANAGER)
+
+        text = self.comboBox.currentText().strip()
+
+        match text:
+            case ('Таблица Отели'):
+                self.table_view = TableViewWidget(headers_full, HOTEL_MANAGER)
+            case ('Таблица Регионы'):
+                self.table_view = TableViewWidget(headers_regions, REGION_MANAGER)
+            case ('Таблица Управляющие'):
+                self.table_view = TableViewWidget(headers_admins, ADMIN_MANAGER)
+            case ('Таблица Контактные лица'):
+                self.table_view = TableViewWidget(headers_entities, ENTITIES_MANAGER)
+            case ('Таблица Клиенты'):
+                self.table_view = TableViewWidget(headers_clients, CLIENTS_MANAGER)
+            case ('Таблица Туры'):
+                self.table_view = TableViewWidget(headers_tours, TOURS_MANAGER)
 
         self.table_view.show()
 
@@ -76,8 +106,9 @@ class TableViewWidget(QDialog):
 
     def init_table(self):
         data = self.table.get_units()
-        if isinstance(self.table, Hotel):
-            data = self.table.get_pretty_units()
+        print(data)
+        # if isinstance(self.table, Hotel):
+        #     data = self.table.get_pretty_units()
 
         self.tableWidget.clear()
         self.tableWidget.setColumnCount(len(self.headers))
@@ -108,12 +139,21 @@ class TableViewWidget(QDialog):
             form_data['place_id'] = list
         if form_data.get('admin_id'):
             form_data['admin_id'] = list
+        if form_data.get('entity_id'):
+            form_data['entity_id'] = list
+        if form_data.get('hotel_id'):
+            form_data['hotel_id'] = list
+        if form_data.get('type'):
+            form_data['type'] = list
+
+        print(form_data)
 
         if self.sender() == self.addButton:
 
             del form_data['id']
-            self.form = Form(self, form_data, self.table.__class__.__name__, window_title='Добавить',
-                             headers=self.headers)
+            self.form = Form(
+                self, form_data, self.table.__class__.__name__, window_title='Добавить', headers=self.headers
+            )
             self.form.show()
 
             if self.form.exec():
@@ -131,8 +171,10 @@ class TableViewWidget(QDialog):
             values['id'] = int(values['id'])
             values['row_number'] = row_number
 
-            self.form = Form(self, form_data, self.table.__class__.__name__, values, window_title='Редактировать',
-                             headers=self.headers)
+            self.form = Form(
+                self, form_data, self.table.__class__.__name__, values, window_title='Редактировать',
+                headers=self.headers
+            )
             self.form.show()
 
             if self.form.exec():
