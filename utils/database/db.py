@@ -4,7 +4,8 @@ from sqlalchemy import create_engine, delete, insert, Table, select, update
 from sqlalchemy.engine import Connection, Row
 
 from __config__ import PROJECT_SOURCE_PATH_DB
-from utils.database.schema import admins, clients, entities, hotels, regions, tours, TypeOfClient, TypeOfFood
+from utils.database.schema import admins, clients, entities, hotels, regions, tours, TypeOfClient, TypeOfFood, \
+    tour_info, orders
 
 database_path: str = f"sqlite:///{PROJECT_SOURCE_PATH_DB}/database.db"
 engine = create_engine(database_path)
@@ -218,3 +219,17 @@ class Clients(Unit):
             lambda x: list(x[0:2]) + [x[2].value] + list(x[4:]),
             self.get_session().execute(self.join_entities(select(self.table, Entities.table))).all())
         )
+
+
+class TourInfo(Unit):
+    table = tour_info
+
+
+class Order(Unit):
+    table = orders
+
+    def join_tours(self, sql_request):
+        return sql_request.join(Entities.table, self.table.c.id == TourInfo.table.c.order_id)
+
+    def get_units(self):
+        return self.get_session().execute(self.join_tours(select(self.table, TourInfo.table))).all()

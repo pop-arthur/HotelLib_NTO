@@ -1,7 +1,7 @@
 from sqlalchemy import (
     Column, Date, ForeignKey, Integer,
     MetaData, String, Table, Enum as sqlEnum,
-    Float
+    Float,
 )
 
 from enum import Enum, unique
@@ -31,6 +31,12 @@ class TypeOfFood(Enum):
 class TypeOfClient(Enum):
     legal = 'юридическое  лицо'
     individual = 'физическое лицо'
+
+
+@unique
+class TypeOfPay(Enum):
+    credit = 'кредит'
+    prepay = 'предоплата'
 
 
 hotels = Table(
@@ -95,4 +101,28 @@ clients = Table(
     Column('id', Integer, primary_key=True, nullable=False),
     Column('entity_id', Integer, ForeignKey('entities.id', ondelete='SET NULL'), nullable=True),
     Column('type', sqlEnum(TypeOfClient, name='type_of_client'), nullable=False),
+)
+
+tour_info = Table(
+    'tour_info',
+    metadata,
+
+    Column('id', Integer, primary_key=True, nullable=False),
+    Column('tour_id', Integer, ForeignKey('tours.id', ondelete='SET NULL'), nullable=True),
+    Column('price', Integer, nullable=False),
+    Column('person_count', Integer, nullable=False),
+    Column('cost', Float(2), nullable=False),
+
+    Column('order_id', Integer, ForeignKey('orders.id', ondelete='SET NULL'), nullable=True),
+)
+
+orders = Table(
+    'orders',
+    metadata,
+
+    Column('id', Integer, primary_key=True, nullable=False),
+    Column('client_id', Integer, ForeignKey('clients.id', ondelete='SET NULL'), nullable=True),
+    Column('pay_type', sqlEnum(TypeOfPay, name='type_of_pay'), nullable=False),
+    Column('summary_cost', Float(2), nullable=False)
+
 )
