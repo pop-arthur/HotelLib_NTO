@@ -70,16 +70,21 @@ text-shadow: 0px 0px 50px #FFFFFF;</string>
     </font>
    </property>
    <property name="cursor">
-    <cursorShape>OpenHandCursor</cursorShape>
+    <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="styleSheet">
     <string notr="true">QPushButton
 {
-	color: #000000;
 	text-shadow: 0px 0px 50px #FFFFFF;
-	background-color: #6CF1DA;
-	border-radius: 10px;
-	cursor: pointer;
+	color: #ffffff;
+	background-color: #FF0E6C;
+	border-radius: 15;
+	transition-timing-function: linear;
+}
+QPushButton::hover
+{
+	background-color: #fff;
+	color: #000;
 }</string>
    </property>
    <property name="text">
@@ -161,15 +166,25 @@ background-color: transparent;
     </font>
    </property>
    <property name="cursor">
-    <cursorShape>OpenHandCursor</cursorShape>
+    <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #000000;
-text-shadow: 0px 0px 50px #FFFFFF;
-background-color: #6CF1DA;
-border-radius: 10px;
-padding-left: 20px;
-text-align: center;</string>
+    <string notr="true">QComboBox {
+	color: #ffffff;
+	background-color: #FF0E6C;
+	border-radius: 10px;
+	padding-left: 20px;
+	text-align: center;
+	text-shadow: 0px 0px 50px #FFFFFF;
+	selection-color: #ffffff;
+}
+
+QComboBox::focus
+{
+	color: #ffffff;
+}
+
+</string>
    </property>
    <property name="sizeAdjustPolicy">
     <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
@@ -215,19 +230,22 @@ text-align: center;</string>
     </rect>
    </property>
    <property name="cursor">
-    <cursorShape>SizeBDiagCursor</cursorShape>
+    <cursorShape>ArrowCursor</cursorShape>
    </property>
    <property name="text">
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>../icons/qr_code.png</pixmap>
+    <pixmap>../icons/qr_code_r.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
    </property>
   </widget>
   <widget class="QPlainTextEdit" name="plainTextEdit">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>130</x>

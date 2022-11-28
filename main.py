@@ -12,7 +12,7 @@ from utils.forms import Form, DeleteForm
 sys._excepthook = sys.excepthook
 
 headers_full = ['ID', 'Название', 'Местонахождение', 'Номер телефона', 'Управляющий', 'Описание']
-headers_admins = ['ID', 'Роль', 'ФИО']
+headers_admins = ['ID', 'Роль', 'Телефон', 'Почта', 'ФИО']
 headers_regions = ['ID', 'Регион']
 
 headers_tours = [
@@ -20,7 +20,7 @@ headers_tours = [
     'Тип Еды', 'Стоимость Тура', 'Описание'
 ]
 headers_entities = ['ID', 'Телефон', 'Почта', 'ФИО']
-headers_clients = ['ID', 'Контактное Лицо', 'Тип Клиента']
+headers_clients = ['ID', 'Контактное Лицо', 'Тип Клиента', 'Телефон', 'Почта', 'ФИО']
 
 CONVERTED_TYPES = {
     'DATE': datetime,
@@ -106,7 +106,7 @@ class TableViewWidget(QDialog):
 
     def init_table(self):
         data = self.table.get_units()
-        print(data)
+
         # if isinstance(self.table, Hotel):
         #     data = self.table.get_pretty_units()
 
@@ -146,8 +146,6 @@ class TableViewWidget(QDialog):
         if form_data.get('type'):
             form_data['type'] = list
 
-        print(form_data)
-
         if self.sender() == self.addButton:
 
             del form_data['id']
@@ -162,14 +160,13 @@ class TableViewWidget(QDialog):
         elif self.sender() == self.editButton:
 
             row_number = self.tableWidget.currentRow()
-            if not row_number > 0:
+            if not row_number >= 0:
                 return -1
 
             row_data = [self.tableWidget.item(row_number, i).text() for i in range(len(self.headers))]
 
             values = {header: elem for header, elem in zip(list(form_data.keys()), row_data)}
             values['id'] = int(values['id'])
-            values['row_number'] = row_number
 
             self.form = Form(
                 self, form_data, self.table.__class__.__name__, values, window_title='Редактировать',
